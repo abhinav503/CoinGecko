@@ -6,7 +6,7 @@ class MarketCoinModel {
   double? currentPrice;
   double? marketCap;
   int? marketCapRank;
-
+  double? priceChangePercentage24h;
   MarketCoinModel({
     this.id,
     this.symbol,
@@ -15,6 +15,7 @@ class MarketCoinModel {
     this.currentPrice,
     this.marketCap,
     this.marketCapRank,
+    this.priceChangePercentage24h,
   });
 
   MarketCoinModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +26,11 @@ class MarketCoinModel {
     currentPrice = double.parse(json['current_price'].toString());
     marketCap = double.parse(json['market_cap'].toString());
     marketCapRank = json['market_cap_rank'];
+    priceChangePercentage24h = double.parse(
+      double.parse(
+        json['price_change_percentage_24h'].toString(),
+      ).toStringAsFixed(2),
+    );
   }
 
   Map<String, dynamic> toJson() {

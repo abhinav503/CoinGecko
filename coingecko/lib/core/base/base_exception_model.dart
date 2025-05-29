@@ -9,11 +9,13 @@ Future<Either<ApiFailureModel, T>> baseMethodExceptions<T>(
   try {
     bool isInternetConnected = await checkInternetConnection();
     if (!isInternetConnected) {
-      return Left(ApiFailureModel(message: internetNotConnected));
+      return Left(
+        ApiFailureModel(message: StringConstants.internetNotConnected),
+      );
     }
     return await baseMethod();
   } catch (e) {
-    return Left(ApiFailureModel(message: somethingWentWrong));
+    return Left(ApiFailureModel(message: StringConstants.somethingWentWrong));
   }
 }
 

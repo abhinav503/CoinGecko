@@ -1,9 +1,8 @@
-const String dadJokeForYou = "Dad Joke For You";
-const String searchDadJokes = "Search dad jokes";
-const String search = "Search";
-const String searchResults = "Search Results";
-const String dadJoke = "Dad Joke";
-const String random = "Random";
-const String somethingWentWrong = "Somaething Went Wrong!";
-const String internetNotConnected = "Internet Not Connected!";
-const String noResultsFound = "No Results Found!";
+class StringConstants {
+  static const String somethingWentWrong = "Somaething Went Wrong!";
+  static const String internetNotConnected = "Internet Not Connected!";
+  static const String totalBalance = "Total Balance";
+  static const String deposit = "Deposit";
+  static const String buy = "Buy";
+  static const String sell = "Sell";
+}

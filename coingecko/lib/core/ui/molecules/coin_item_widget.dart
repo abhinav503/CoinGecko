@@ -9,10 +9,35 @@ class CoinItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      dense: true,
       onTap: onTap,
       leading: Image.network(coin.image ?? ""),
-      title: Text(coin.name ?? ""),
-      subtitle: Text(coin.symbol ?? ""),
+      title: Text(
+        coin.name ?? "",
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      subtitle: Text(
+        (coin.symbol ?? "").toUpperCase(),
+        style: Theme.of(context).textTheme.titleSmall,
+      ),
+      trailing: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            "${coin.priceChangePercentage24h}%",
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color:
+                  coin.priceChangePercentage24h! > 0
+                      ? Colors.green
+                      : Colors.red,
+            ),
+          ),
+          Text(
+            "\$${coin.currentPrice}",
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+        ],
+      ),
     );
   }
 }

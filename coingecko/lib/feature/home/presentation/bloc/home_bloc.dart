@@ -39,7 +39,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         },
         (data) {
           marketCoins.addAll(data);
-          print(marketCoins.length);
+          print("marketCoins length: ${marketCoins.length}");
           page++;
           emitState(FetchMarketCoinsState());
         },

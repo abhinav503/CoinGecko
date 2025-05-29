@@ -9,6 +9,7 @@ class MarketCoinEntity extends Mapper<MarketCoinModel, MarketCoinEntity> {
   double? currentPrice;
   double? marketCap;
   int? marketCapRank;
+  double? priceChangePercentage24h;
 
   MarketCoinEntity({
     this.id,
@@ -18,6 +19,7 @@ class MarketCoinEntity extends Mapper<MarketCoinModel, MarketCoinEntity> {
     this.currentPrice,
     this.marketCap,
     this.marketCapRank,
+    this.priceChangePercentage24h,
   });
 
   MarketCoinEntity.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class MarketCoinEntity extends Mapper<MarketCoinModel, MarketCoinEntity> {
     currentPrice = json['current_price'];
     marketCap = json['market_cap'];
     marketCapRank = json['market_cap_rank'];
+    priceChangePercentage24h = json['price_change_percentage_24h'];
   }
 
   Map<String, dynamic> toJson() {
@@ -39,6 +42,7 @@ class MarketCoinEntity extends Mapper<MarketCoinModel, MarketCoinEntity> {
     data['current_price'] = currentPrice;
     data['market_cap'] = marketCap;
     data['market_cap_rank'] = marketCapRank;
+    data['price_change_percentage_24h'] = priceChangePercentage24h;
     return data;
   }
 
@@ -52,6 +56,7 @@ class MarketCoinEntity extends Mapper<MarketCoinModel, MarketCoinEntity> {
       currentPrice: object.currentPrice,
       marketCap: object.marketCap,
       marketCapRank: object.marketCapRank,
+      priceChangePercentage24h: object.priceChangePercentage24h,
     );
   }
 }
