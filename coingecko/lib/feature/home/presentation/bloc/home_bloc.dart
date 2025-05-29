@@ -38,8 +38,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emitState(FetchMarketCoinsState());
         },
         (data) {
-          marketCoins = data;
+          marketCoins.addAll(data);
           print(marketCoins.length);
+          page++;
           emitState(FetchMarketCoinsState());
         },
       );

@@ -5,4 +5,5 @@ class ApiConstants {
   );
 
   static const String marketCoinsApi = "coins/markets";
+  static const String coinDetailsApi = "coins/";
 }

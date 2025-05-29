@@ -1,3 +1,6 @@
+import 'package:coingecko/core/ui/atoms/primary_button.dart';
+import 'package:coingecko/core/ui/molecules/coin_item_widget.dart';
+import 'package:coingecko/feature/coin_details/presentation/views/coin_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';
@@ -16,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     print("initState");
     getBloc.add(FetchMarketCoinsEvent());
-    // getBloc.paginationScrollController.init(loadAction: _onNextPageCall);
+    getBloc.paginationScrollController.init(loadAction: _onNextPageCall);
     super.initState();
   }
 
@@ -27,42 +30,52 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 20),
-          //   child: CustomTextField(
-          //     key: const Key("HomeTextField"),
-          //     controller: getBloc.searchController,
-          //     hintText: searchDadJokes,
-          //     onChanged: _onChangedText,
-          //   ),
-          // ),
-          // BlocBuilder<HomeBloc, HomeState>(
-          //   buildWhen:
-          //       (previous, current) => current is FetchSingleDadJokeState,
-          //   builder: (context, state) {
-          //     if (state is FetchSingleDadJokeState) {
-          //       return JokeItemWidget(joke: state.dadJokeEntity?.joke ?? "");
-          //     }
-          //     return const LoadingWidget();
-          //   },
-          // ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Column(children: [Text("Total Balance"), Text("\$1000")]),
+                PrimaryButton(text: "Add Coin", onPressed: () {}),
+              ],
+            ),
+          ),
+          const Divider(),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Column(children: [Text("Total Balance"), Text("\$1000")]),
+          ),
+          const Divider(),
           Flexible(
             child: BlocConsumer<HomeBloc, HomeState>(
               listener: (context, state) {
-                // if (state is FetchSearchResultsState) {
-                //   getBloc.paginationScrollController.isLoading = false;
-                // } else if (state is FetchErrorState) {
-                //   FocusScope.of(context).unfocus();
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //     SnackBar(content: Text(state.apiFailureModel.message)),
-                //   );
-                // }
+                if (state is FetchMarketCoinsState) {
+                  getBloc.paginationScrollController.isLoading = false;
+                }
               },
               builder: (context, state) {
-                if (getBloc.searchController.text.isEmpty) {
+                if (getBloc.marketCoins.isEmpty) {
                   return _buildEmptyObject();
                 }
-                return Container();
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: getBloc.marketCoins.length,
+                  controller:
+                      getBloc.paginationScrollController.scrollController,
+                  itemBuilder: (context, index) {
+                    return CoinItemWidget(
+                      coin: getBloc.marketCoins[index],
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CoinDetailsPage(),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
               },
             ),
           ),
@@ -73,30 +86,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   SizedBox _buildEmptyObject() => const SizedBox.shrink();
 
-  // void _onChangedText(text) {
-  //   if (getBloc.debounce?.isActive ?? false) getBloc.debounce?.cancel();
-  //   getBloc.debounce = Timer(const Duration(milliseconds: 500), () {
-  //     getBloc.add(
-  //       FetchSearchResultsEvent(term: text, page: 1, isNewSearch: true),
-  //     );
-  //   });
-  // }
-
-  // _onNextPageCall() async {
-  //   int lastPage = getBloc.searchDadJokeResultsEntity?.totalPages ?? 1;
-  //   int currentPage = getBloc.searchDadJokeResultsEntity?.currentPage ?? 1;
-  //   getBloc.paginationScrollController.currentPage = currentPage;
-  //   if (lastPage > currentPage) {
-  //     getBloc.paginationScrollController.isLoading = true;
-  //     getBloc.add(
-  //       FetchSearchResultsEvent(
-  //         term: getBloc.searchController.text,
-  //         limit: getBloc.limit,
-  //         page: currentPage + 1,
-  //       ),
-  //     );
-  //   } else if (lastPage == currentPage) {
-  //     return true;
-  //   }
-  // }
+  _onNextPageCall() async {
+    getBloc.paginationScrollController.isLoading = true;
+    getBloc.add(FetchMarketCoinsEvent());
+  }
 }
