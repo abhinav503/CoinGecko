@@ -14,16 +14,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      key: const Key("HomeScaffoldGestureDetector"),
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SafeArea(
-          child: BlocProvider(
-            create: (context) => HomeBloc(),
-            child: const HomeScreen(),
-          ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        child: BlocProvider(
+          create: (context) => HomeBloc(getMarketCoinsUsecase: sl()),
+          child: const HomeScreen(),
         ),
       ),
     );

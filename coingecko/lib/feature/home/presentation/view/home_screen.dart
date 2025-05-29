@@ -1,8 +1,3 @@
-import 'dart:async';
-import 'package:coingecko/core/constants/string_constants.dart';
-import 'package:coingecko/core/ui/atoms/custom_text_field.dart';
-import 'package:coingecko/feature/home/presentation/widget/joke_item_widget.dart';
-import 'package:coingecko/feature/home/presentation/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';
@@ -19,7 +14,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // getBloc.add(FetchSingleDadJokeEvent());
+    print("initState");
+    getBloc.add(FetchMarketCoinsEvent());
     // getBloc.paginationScrollController.init(loadAction: _onNextPageCall);
     super.initState();
   }

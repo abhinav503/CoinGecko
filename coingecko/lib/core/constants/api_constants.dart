@@ -1,3 +1,8 @@
-const String apiPrefix = "https://icanhazdadjoke.com/";
+class ApiConstants {
+  static const String apiPrefix = String.fromEnvironment("BASE_URL");
+  static const String coingeckoApiKey = String.fromEnvironment(
+    "COINGECKO_API_KEY",
+  );
 
-const String catsDataApi = "fact";
+  static const String marketCoinsApi = "coins/markets";
+}

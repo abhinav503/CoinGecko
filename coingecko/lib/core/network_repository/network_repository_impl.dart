@@ -9,7 +9,7 @@ class NetworkRepositoryImpl implements NetworkRepository {
     Map<String, String>? headers,
     Map<String, String>? queries,
   }) async {
-    String apiEndpoint = apiPrefix + urlSuffix;
+    String apiEndpoint = ApiConstants.apiPrefix + urlSuffix;
     if (queries != null) {
       apiEndpoint += "?";
       queries.forEach((key, value) {
