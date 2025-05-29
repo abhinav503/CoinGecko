@@ -3,6 +3,7 @@ import 'package:coingecko/core/ui/atoms/pagination_controller.dart';
 import 'package:coingecko/feature/home/domain/entities/get_market_coins_req_entity.dart';
 import 'package:coingecko/feature/home/domain/entities/market_coin_entity.dart';
 import 'package:coingecko/feature/home/domain/usecase/get_market_coins_usecase.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 part 'home_event.dart';
@@ -17,6 +18,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Timer? debounce;
   PaginationScrollController paginationScrollController =
       PaginationScrollController();
+  TabController? tabController;
   TextEditingController searchController = TextEditingController();
 
   List<MarketCoinEntity> marketCoins = [];

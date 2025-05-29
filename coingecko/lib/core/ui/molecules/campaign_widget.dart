@@ -19,7 +19,7 @@ class CampaignWidget extends StatelessWidget {
               StringConstants.newUserZone,
               style: Theme.of(context).textTheme.titleSmall,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 2),
             Text(
               StringConstants.get100USDbonusOnYourFirstDeposit,
               style: Theme.of(context).textTheme.titleMedium,

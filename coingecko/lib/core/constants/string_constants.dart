@@ -8,4 +8,9 @@ class StringConstants {
   static const String newUserZone = "New User Zone";
   static const String get100USDbonusOnYourFirstDeposit =
       "Get 100 USD bonus on your \nfirst deposit";
+  static const String all = "All";
+  static const String marketCap = "Market Cap";
+  static const String volume = "Volume";
+  static const String price = "Price";
+  static const String change24h = "24h Change";
 }

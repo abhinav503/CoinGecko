@@ -3,8 +3,8 @@ import 'package:coingecko/core/ui/atoms/carousel_slider_widget.dart';
 import 'package:coingecko/core/ui/atoms/custom_icon_widget.dart';
 import 'package:coingecko/core/ui/atoms/primary_button.dart';
 import 'package:coingecko/core/ui/molecules/campaign_widget.dart';
-import 'package:coingecko/core/ui/molecules/coin_item_widget.dart';
-import 'package:coingecko/feature/coin_details/presentation/views/coin_details_page.dart';
+import 'package:coingecko/core/ui/molecules/custom_tabbar.dart';
+import 'package:coingecko/feature/home/presentation/widgets/coins_lisview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';
@@ -17,14 +17,21 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   HomeBloc get getBloc => context.read<HomeBloc>();
 
   @override
   void initState() {
+    getBloc.tabController = TabController(length: 4, vsync: this);
     getBloc.add(FetchMarketCoinsEvent());
     getBloc.paginationScrollController.init(loadAction: _onNextPageCall);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    getBloc.tabController?.dispose();
+    super.dispose();
   }
 
   @override
@@ -93,24 +100,55 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (getBloc.marketCoins.isEmpty) {
                   return _buildEmptyObject();
                 }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: getBloc.marketCoins.length,
-                  controller:
-                      getBloc.paginationScrollController.scrollController,
-                  itemBuilder: (context, index) {
-                    return CoinItemWidget(
-                      coin: getBloc.marketCoins[index],
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CoinDetailsPage(),
+                return Column(
+                  children: [
+                    CustomTabbar(
+                      tabController: getBloc.tabController!,
+                      tabs: const [
+                        StringConstants.all,
+                        StringConstants.marketCap,
+                        StringConstants.price,
+                        StringConstants.change24h,
+                      ],
+                      onTabChanged: (index) {},
+                    ),
+                    const SizedBox(height: 10),
+                    Flexible(
+                      child: TabBarView(
+                        controller: getBloc.tabController,
+                        children: [
+                          CoinsListview(
+                            coins: getBloc.marketCoins,
+                            controller:
+                                getBloc
+                                    .paginationScrollController
+                                    .scrollController,
                           ),
-                        );
-                      },
-                    );
-                  },
+                          CoinsListview(
+                            coins: getBloc.marketCoins,
+                            controller:
+                                getBloc
+                                    .paginationScrollController
+                                    .scrollController,
+                          ),
+                          CoinsListview(
+                            coins: getBloc.marketCoins,
+                            controller:
+                                getBloc
+                                    .paginationScrollController
+                                    .scrollController,
+                          ),
+                          CoinsListview(
+                            coins: getBloc.marketCoins,
+                            controller:
+                                getBloc
+                                    .paginationScrollController
+                                    .scrollController,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 );
               },
             ),

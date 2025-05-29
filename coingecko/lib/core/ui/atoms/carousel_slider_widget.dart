@@ -19,7 +19,7 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
       children: [
         CarouselSlider(
           options: CarouselOptions(
-            height: 70.h,
+            height: 60.h,
             autoPlay: true,
             aspectRatio: 16 / 9,
             viewportFraction: 1,
