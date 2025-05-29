@@ -1,6 +1,8 @@
 import 'package:coingecko/core/constants/string_constants.dart';
+import 'package:coingecko/core/ui/atoms/carousel_slider_widget.dart';
 import 'package:coingecko/core/ui/atoms/custom_icon_widget.dart';
 import 'package:coingecko/core/ui/atoms/primary_button.dart';
+import 'package:coingecko/core/ui/molecules/campaign_widget.dart';
 import 'package:coingecko/core/ui/molecules/coin_item_widget.dart';
 import 'package:coingecko/feature/coin_details/presentation/views/coin_details_page.dart';
 import 'package:flutter/material.dart';
@@ -66,35 +68,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const Divider(),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "New User Zone",
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "Get 100 USD bonus on your \nfirst deposit",
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: CustomIconWidget(
-                    icon: HugeIcons.strokeRoundedAiNetwork,
-                    color: Colors.red,
-                    size: 50.0,
-                  ),
-                ),
-              ],
-            ),
+          const SizedBox(height: 10),
+          const CarouselSliderWidget(
+            items: [
+              CampaignWidget(
+                icon: HugeIcons.strokeRoundedAiNetwork,
+                color: Colors.red,
+              ),
+              CampaignWidget(
+                icon: HugeIcons.strokeRoundedAiBrain02,
+                color: Colors.blue,
+              ),
+            ],
           ),
           const Divider(),
           Flexible(

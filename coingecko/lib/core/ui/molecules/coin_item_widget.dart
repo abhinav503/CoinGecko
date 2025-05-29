@@ -1,3 +1,4 @@
+import 'package:coingecko/core/ui/molecules/custom_network_image.dart';
 import 'package:coingecko/feature/home/domain/entities/market_coin_entity.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class CoinItemWidget extends StatelessWidget {
     return ListTile(
       dense: true,
       onTap: onTap,
-      leading: Image.network(coin.image ?? ""),
+      leading: CustomNetworkImage(imageUrl: coin.image ?? ""),
       title: Text(
         coin.name ?? "",
         style: Theme.of(context).textTheme.titleMedium,
@@ -24,7 +25,7 @@ class CoinItemWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            "${coin.priceChangePercentage24h}%",
+            "${coin.priceChangePercentage24h! > 0 ? "+" : ""}${coin.priceChangePercentage24h}%",
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
               color:
                   coin.priceChangePercentage24h! > 0
