@@ -8,6 +8,7 @@ import 'package:coingecko/feature/home/presentation/widgets/coins_lisview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -89,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ],
           ),
           const Divider(),
+          const SizedBox(height: 10),
           Flexible(
             child: BlocConsumer<HomeBloc, HomeState>(
               listener: (context, state) {
@@ -102,6 +104,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 }
                 return Column(
                   children: [
+                    Row(
+                      children: [
+                        SizedBox(width: 12.w),
+                        Text(
+                          StringConstants.watchlist,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const SizedBox(width: 30),
+                        Text(
+                          StringConstants.coin,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
                     CustomTabbar(
                       tabController: getBloc.tabController!,
                       tabs: const [

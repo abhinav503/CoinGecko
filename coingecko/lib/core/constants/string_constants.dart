@@ -13,4 +13,6 @@ class StringConstants {
   static const String volume = "Volume";
   static const String price = "Price";
   static const String change24h = "24h Change";
+  static const String watchlist = "Watchlist";
+  static const String coin = "Coin";
 }
