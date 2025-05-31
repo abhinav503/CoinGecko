@@ -1,3 +1,4 @@
+import 'package:coingecko/core/base/base_screen.dart';
 import 'package:coingecko/core/colors/app_colors.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/enums/market_chart_time_filter.dart';
@@ -13,7 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-class CoinDetailsScreen extends StatefulWidget {
+class CoinDetailsScreen extends BaseScreen {
   final String id;
   const CoinDetailsScreen({super.key, required this.id});
 
@@ -21,7 +22,7 @@ class CoinDetailsScreen extends StatefulWidget {
   State<CoinDetailsScreen> createState() => _CoinDetailsScreenState();
 }
 
-class _CoinDetailsScreenState extends State<CoinDetailsScreen>
+class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
     with TickerProviderStateMixin {
   CoinDetailsBloc get getBloc => context.read<CoinDetailsBloc>();
   late TabController tabController;
@@ -48,8 +49,13 @@ class _CoinDetailsScreenState extends State<CoinDetailsScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<CoinDetailsBloc, CoinDetailsState>(
+  Widget body(BuildContext context) {
+    return BlocConsumer<CoinDetailsBloc, CoinDetailsState>(
+      listener: (context, state) {
+        if (state is CoinDetailsApiErrorState) {
+          showToast(state.message);
+        }
+      },
       builder: (context, state) {
         if (getBloc.coinItemEntity == null ||
             getBloc.coinMarketDataEntity == null) {

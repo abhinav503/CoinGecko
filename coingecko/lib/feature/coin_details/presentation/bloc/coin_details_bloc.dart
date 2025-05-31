@@ -44,8 +44,7 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
     );
     result.fold(
       (failure) {
-        print(failure);
-        // emit(CoinDetailsApiCallState());
+        emit(CoinDetailsApiErrorState(message: failure.message));
       },
       (data) {
         coinItemEntity = data;
@@ -68,7 +67,7 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
     );
     result.fold(
       (failure) {
-        print(failure);
+        emit(CoinDetailsApiErrorState(message: failure.message));
       },
       (data) {
         coinMarketDataEntity = data;

@@ -1,3 +1,4 @@
+import 'package:coingecko/core/base/base_screen.dart';
 import 'package:coingecko/core/colors/app_colors.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/ui/atoms/carousel_slider_widget.dart';
@@ -12,14 +13,15 @@ import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends BaseScreen {
   const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+class _HomeScreenState extends BaseScreenState<HomeScreen>
+    with TickerProviderStateMixin {
   HomeBloc get getBloc => context.read<HomeBloc>();
 
   @override
@@ -37,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget body(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -97,6 +99,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               listener: (context, state) {
                 if (state is FetchMarketCoinsState) {
                   getBloc.paginationScrollController.isLoading = false;
+                }
+                if (state is FetchMarketCoinsErrorState) {
+                  showToast(state.message);
                 }
               },
               builder: (context, state) {

@@ -37,7 +37,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       );
       response.fold(
         (failure) {
-          emitState(FetchMarketCoinsState());
+          emitState(FetchMarketCoinsErrorState(message: failure.message));
         },
         (data) {
           marketCoins.addAll(data);

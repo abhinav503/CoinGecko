@@ -17,7 +17,7 @@ Future<Either<ApiFailureModel, T>> baseMethodExceptions<T>(
   } catch (e, stackTrace) {
     print(e);
     print(stackTrace);
-    return Left(ApiFailureModel(message: StringConstants.somethingWentWrong));
+    return Left(ApiFailureModel(message: e.toString()));
   }
 }
 
