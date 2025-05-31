@@ -1,5 +1,6 @@
 import 'package:coingecko/core/colors/app_colors.dart';
 import 'package:coingecko/core/enums/market_chart_time_filter.dart';
+import 'package:coingecko/core/ui/atoms/primary_chip.dart';
 import 'package:coingecko/feature/coin_details/domain/entities/coin_market_data_entity.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +8,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CoinPriceChart extends StatefulWidget {
   final CoinMarketDataEntity marketData;
+  final String id;
   final MarketChartTimeFilter selectedFilter;
-  final Function(MarketChartTimeFilter) onFilterChanged;
+  final double height;
+  final TextStyle? tooltipTextStyle;
+  final Function(MarketChartTimeFilter, String) onFilterChanged;
 
   const CoinPriceChart({
     super.key,
     required this.marketData,
+    required this.id,
     required this.selectedFilter,
     required this.onFilterChanged,
+    this.height = 220,
+    this.tooltipTextStyle,
   });
 
   @override
@@ -31,7 +38,7 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
       child: Column(
         children: [
           SizedBox(
-            height: 220.h,
+            height: widget.height,
             child: LineChart(_createLineChartData(context)),
           ),
           SizedBox(height: 20.h),
@@ -47,27 +54,10 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
       children:
           MarketChartTimeFilter.values.map((filter) {
             final isSelected = filter == widget.selectedFilter;
-            return InkWell(
-              onTap: () => widget.onFilterChanged(filter),
-              splashColor: Colors.transparent,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color:
-                      isSelected
-                          ? AppColors.primaryColor.withOpacity(0.1)
-                          : Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  filter.value,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: isSelected ? AppColors.primaryColor : Colors.grey,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
-                  ),
-                ),
-              ),
+            return PrimaryChip(
+              onTap: () => widget.onFilterChanged(filter, widget.id),
+              text: filter.value,
+              isSelected: isSelected,
             );
           }).toList(),
     );
@@ -142,9 +132,10 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
                 .map(
                   (spot) => LineTooltipItem(
                     "\$ ${spot.y.toStringAsFixed(2)}",
-                    Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColors.primaryTextColorLight,
-                    ),
+                    widget.tooltipTextStyle ??
+                        Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: AppColors.primaryTextColorLight,
+                        ),
                   ),
                 )
                 .toList();

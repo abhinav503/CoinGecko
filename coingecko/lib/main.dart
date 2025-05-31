@@ -1,5 +1,6 @@
 import 'package:coingecko/core/colors.dart';
 import 'package:coingecko/routes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:coingecko/core/di/injection_container.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,11 +9,12 @@ void main() async {
   injectionContainer();
   runApp(
     ScreenUtilInit(
-      designSize: const Size(375, 812),
+      designSize: kIsWeb ? const Size(1920, 1080) : const Size(375, 812),
       minTextAdapt: true,
       builder:
           (context, child) => MaterialApp(
-            onGenerateRoute: Routes.generateRoute,
+            onGenerateRoute:
+                kIsWeb ? Routes.generateRouteWeb : Routes.generateRouteMobile,
             theme: ThemeData(
               textTheme: textTheme(),
               cardColor: greenShade400,

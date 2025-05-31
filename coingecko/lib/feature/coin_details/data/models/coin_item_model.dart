@@ -10,6 +10,8 @@ class CoinItemModel {
   int? marketCapRank;
   double? currentPrice;
   double? priceChange24h;
+  double? high24h;
+  double? low24h;
   double? totalVolume;
   double? priceChangePercentage24h;
   double? priceChangePercentage7d;
@@ -46,6 +48,16 @@ class CoinItemModel {
     image = json['image'] != null ? ImageModel.fromJson(json['image']) : null;
     marketCap = json['market_data']['market_cap']['usd'];
     marketCapRank = json['market_cap_rank'];
+    high24h = double.parse(
+      double.parse(
+        json['market_data']['high_24h']['usd'].toString(),
+      ).toStringAsFixed(2),
+    );
+    low24h = double.parse(
+      double.parse(
+        json['market_data']['low_24h']['usd'].toString(),
+      ).toStringAsFixed(2),
+    );
     totalVolume = double.parse(
       double.parse(
         json['market_data']['total_volume']['usd'].toString(),

@@ -12,10 +12,10 @@ class PrimaryTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
+    return GestureDetector(
+      onTap: onPressed,
       child: Text(
-        text,
+        "\n$text",
         style: Theme.of(
           context,
         ).textTheme.bodySmall?.copyWith(color: AppColors.primaryColor),

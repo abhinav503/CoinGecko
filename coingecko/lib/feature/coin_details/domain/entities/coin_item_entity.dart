@@ -11,6 +11,8 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
   ImageEntity? image;
   int? marketCap;
   int? marketCapRank;
+  double? high24h;
+  double? low24h;
   double? totalVolume;
   double? currentPrice;
   double? priceChange24h;
@@ -34,6 +36,8 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
     this.priceChangePercentage24h,
     this.priceChangePercentage7d,
     this.priceChangePercentage30d,
+    this.high24h,
+    this.low24h,
   });
 
   @override
@@ -61,6 +65,8 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
       marketCapRank: object.marketCapRank,
       currentPrice: object.currentPrice,
       totalVolume: object.totalVolume,
+      high24h: object.high24h,
+      low24h: object.low24h,
     );
   }
 }

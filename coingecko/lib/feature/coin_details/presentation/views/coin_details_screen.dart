@@ -3,16 +3,14 @@ import 'package:coingecko/core/colors/app_colors.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/enums/market_chart_time_filter.dart';
 import 'package:coingecko/core/ui/atoms/primary_button.dart';
-import 'package:coingecko/core/ui/atoms/primary_text_button.dart';
 import 'package:coingecko/core/ui/atoms/profit_loss_text_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_tabbar.dart';
-import 'package:coingecko/core/ui/molecules/info_tile.dart';
 import 'package:coingecko/feature/coin_details/presentation/bloc/coin_details_bloc.dart';
+import 'package:coingecko/feature/coin_details/presentation/widgets/coin_overview.dart';
 import 'package:coingecko/feature/coin_details/presentation/widgets/coin_price_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 class CoinDetailsScreen extends BaseScreen {
   final String id;
@@ -26,8 +24,6 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
     with TickerProviderStateMixin {
   CoinDetailsBloc get getBloc => context.read<CoinDetailsBloc>();
   late TabController tabController;
-  bool isDescriptionExpanded = false;
-  final int maxDescriptionLines = 3;
 
   @override
   void initState() {
@@ -35,17 +31,6 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
     getBloc.add(GetCoinDetailsEvent(id: widget.id));
     getBloc.add(GetCoinMarketDataEvent(id: widget.id));
     super.initState();
-  }
-
-  void _onTimeFilterChanged(MarketChartTimeFilter filter) {
-    getBloc.add(UpdateTimeFilterEvent(filter: filter));
-    getBloc.add(GetCoinMarketDataEvent(id: widget.id));
-  }
-
-  void _toggleDescription() {
-    setState(() {
-      isDescriptionExpanded = !isDescriptionExpanded;
-    });
   }
 
   @override
@@ -111,9 +96,10 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
                   ),
                   SizedBox(height: 40.h),
                   CoinPriceChart(
+                    id: widget.id,
                     marketData: getBloc.coinMarketDataEntity!,
                     selectedFilter: getBloc.currentFilter,
-                    onFilterChanged: _onTimeFilterChanged,
+                    onFilterChanged: getBloc.onTimeFilterChanged,
                   ),
                   SizedBox(height: 20.h),
                   CustomTabbar(
@@ -131,96 +117,9 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
                     },
                     tabController: tabController,
                   ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20.h),
-                    height:
-                        isDescriptionExpanded
-                            ? (getBloc.coinItemEntity!.description!.length /
-                                    300) *
-                                200
-                            : 250.h,
-                    child: TabBarView(
-                      controller: tabController,
-                      children: [
-                        Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.w),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    getBloc.coinItemEntity!.description!,
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
-                                    maxLines:
-                                        isDescriptionExpanded
-                                            ? null
-                                            : maxDescriptionLines,
-                                    overflow:
-                                        isDescriptionExpanded
-                                            ? null
-                                            : TextOverflow.ellipsis,
-                                  ),
-                                  if (getBloc
-                                          .coinItemEntity!
-                                          .description!
-                                          .length >
-                                      150)
-                                    PrimaryTextButton(
-                                      onPressed: _toggleDescription,
-                                      text:
-                                          isDescriptionExpanded
-                                              ? StringConstants.showLess
-                                              : StringConstants.showMore,
-                                    ),
-                                ],
-                              ),
-                            ),
-                            InfoTile(
-                              leading: HugeIcons.strokeRoundedRanking,
-                              title: "Rank",
-                              trailing:
-                                  getBloc.coinItemEntity!.marketCapRank
-                                      .toString(),
-                            ),
-                            InfoTile(
-                              leading:
-                                  HugeIcons.strokeRoundedPresentationBarChart01,
-                              title: "Market Cap",
-                              trailingWidget: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    "${(getBloc.coinItemEntity!.marketCap! / 10000000).toStringAsFixed(2)} Cr",
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
-                                  ),
-                                  Text(
-                                    " (${getBloc.coinItemEntity!.priceChangePercentage24h!}%)",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.titleSmall?.copyWith(
-                                      color:
-                                          getBloc.coinItemEntity!.marketCap! > 0
-                                              ? AppColors.successColor
-                                              : AppColors.errorColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            InfoTile(
-                              title: "Total Volume",
-                              trailing:
-                                  "${(getBloc.coinItemEntity!.totalVolume! / 1000000).toStringAsFixed(2)} M",
-                              leading: HugeIcons.strokeRoundedDatabase,
-                            ),
-                          ],
-                        ),
-                        const Text("My Investments"),
-                      ],
-                    ),
+                  CoinOverview(
+                    coinItemEntity: getBloc.coinItemEntity!,
+                    tabController: tabController,
                   ),
                   SizedBox(height: 100.h),
                 ],

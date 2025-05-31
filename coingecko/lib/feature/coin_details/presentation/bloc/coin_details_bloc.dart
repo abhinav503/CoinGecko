@@ -27,6 +27,11 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
     on<UpdateTimeFilterEvent>(_onUpdateTimeFilter);
   }
 
+  void onTimeFilterChanged(MarketChartTimeFilter filter, String id) {
+    add(UpdateTimeFilterEvent(filter: filter));
+    add(GetCoinMarketDataEvent(id: id));
+  }
+
   void _onUpdateTimeFilter(
     UpdateTimeFilterEvent event,
     Emitter<CoinDetailsState> emit,

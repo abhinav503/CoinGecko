@@ -2,7 +2,7 @@ import 'package:coingecko/core/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomTabbar extends StatefulWidget {
+class CustomWebTabbar extends StatefulWidget {
   final List<String> tabs;
   final Function(int) onTabChanged;
   final TabController tabController;
@@ -16,7 +16,8 @@ class CustomTabbar extends StatefulWidget {
   final double height;
   final bool isScrollable;
   final TabAlignment tabAlignment;
-  const CustomTabbar({
+  final Color? backgroundColor;
+  const CustomWebTabbar({
     super.key,
     required this.tabs,
     required this.onTabChanged,
@@ -31,13 +32,14 @@ class CustomTabbar extends StatefulWidget {
     this.isScrollable = true,
     this.tabAlignment = TabAlignment.start,
     this.indicatorPadding,
+    this.backgroundColor,
   });
 
   @override
-  State<CustomTabbar> createState() => _CustomTabbarState();
+  State<CustomWebTabbar> createState() => _CustomWebTabbarState();
 }
 
-class _CustomTabbarState extends State<CustomTabbar> {
+class _CustomWebTabbarState extends State<CustomWebTabbar> {
   @override
   void initState() {
     super.initState();
@@ -48,7 +50,8 @@ class _CustomTabbarState extends State<CustomTabbar> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      color: widget.backgroundColor,
       height: widget.height,
       child: TabBar(
         isScrollable: widget.isScrollable,
@@ -74,6 +77,12 @@ class _CustomTabbarState extends State<CustomTabbar> {
             EdgeInsets.symmetric(vertical: 4.w, horizontal: 10.w),
         tabAlignment: widget.tabAlignment,
         dividerColor: Colors.transparent,
+
+        // labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        // unselectedLabelStyle: TextStyle(
+        //   fontSize: 16,
+        //   fontWeight: FontWeight.w400,
+        // ),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         labelPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         splashFactory: NoSplash.splashFactory,
