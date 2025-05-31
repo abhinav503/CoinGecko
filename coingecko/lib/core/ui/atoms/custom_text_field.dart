@@ -1,4 +1,3 @@
-import 'package:coingecko/core/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -24,7 +23,7 @@ class CustomTextField extends StatelessWidget {
         hintText: hintText,
         hintStyle: Theme.of(
           context,
-        ).textTheme.titleLarge!.copyWith(color: greyColor),
+        ).textTheme.titleLarge!.copyWith(color: Colors.grey),
         filled: true,
         errorStyle: const TextStyle(height: 0.2, fontSize: 12),
         errorMaxLines: 1,

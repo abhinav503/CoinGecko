@@ -1,3 +1,5 @@
+import 'package:coingecko/core/constants/string_constants.dart';
+
 enum MarketChartTimeFilter { oneDay, oneWeek, oneMonth, oneYear }
 
 extension MarketChartTimeFilterExtension on MarketChartTimeFilter {
@@ -39,13 +41,13 @@ extension MarketChartTimeFilterExtension on MarketChartTimeFilter {
   String get titleValue {
     switch (this) {
       case MarketChartTimeFilter.oneDay:
-        return "Past 1 day";
+        return StringConstants.past1Day;
       case MarketChartTimeFilter.oneWeek:
-        return "Past 1 week";
+        return StringConstants.past1Week;
       case MarketChartTimeFilter.oneMonth:
-        return "Past 1 month";
+        return StringConstants.past1Month;
       case MarketChartTimeFilter.oneYear:
-        return "Past 1 year";
+        return StringConstants.past1Year;
     }
   }
 }

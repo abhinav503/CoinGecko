@@ -77,12 +77,6 @@ class _CustomWebTabbarState extends State<CustomWebTabbar> {
             EdgeInsets.symmetric(vertical: 4.w, horizontal: 10.w),
         tabAlignment: widget.tabAlignment,
         dividerColor: Colors.transparent,
-
-        // labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        // unselectedLabelStyle: TextStyle(
-        //   fontSize: 16,
-        //   fontWeight: FontWeight.w400,
-        // ),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         labelPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         splashFactory: NoSplash.splashFactory,

@@ -1,3 +1,4 @@
+import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:http/http.dart';
 import 'package:coingecko/core/constants/api_constants.dart';
 import 'package:coingecko/core/network_repository/network_repository.dart';
@@ -27,15 +28,15 @@ class NetworkRepositoryImpl implements NetworkRepository {
     if (response.statusCode == 200) {
       return response;
     } else if (response.statusCode == 429) {
-      throw Exception("API rate limit exceeded");
+      throw Exception(StringConstants.apiRateLimitExceeded);
     } else if (response.statusCode == 404) {
-      throw Exception("Does not exist");
+      throw Exception(StringConstants.doesNotExist);
     } else if (response.statusCode == 401) {
-      throw Exception("Unauthorized");
+      throw Exception(StringConstants.unauthorized);
     } else if (response.statusCode == 403) {
-      throw Exception("Forbidden");
+      throw Exception(StringConstants.forbidden);
     } else {
-      throw Exception("Something went wrong");
+      throw Exception(StringConstants.somethingWentWrong);
     }
   }
 }

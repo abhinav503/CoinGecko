@@ -155,26 +155,6 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
             });
           }
         },
-        // getTouchedSpotIndicator: (
-        //   LineChartBarData barData,
-        //   List<int> spotIndexes,
-        // ) {
-        //   return spotIndexes.map((index) {
-        //     return TouchedSpotIndicatorData(
-        //       FlLine(color: AppColors.primaryColor, strokeWidth: 2),
-        //       FlDotData(
-        //         show: true,
-        //         getDotPainter:
-        //             (spot, percent, barData, index) => FlRadioDotPainter(
-        //               fillColor: AppColors.primaryColor,
-        //               borderColor: AppColors.primaryColor,
-        //               outerRadius: 9,
-        //               innerRadius: 6.4,
-        //             ),
-        //       ),
-        //     );
-        //   }).toList();
-        // },
       ),
     );
   }

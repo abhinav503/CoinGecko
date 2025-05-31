@@ -1,4 +1,5 @@
 import 'package:coingecko/core/colors/app_colors.dart';
+import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/ui/molecules/custom_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,7 +42,7 @@ class CoinSelectedWidget extends StatelessWidget {
               backgroundColor: WebAppbarColors.appbarTextColor,
             ),
             Text(
-              " USD",
+              " ${StringConstants.usd}",
               style: Theme.of(context).textTheme.titleSmall!.copyWith(
                 color: WebAppbarColors.appbarTextColor,
               ),

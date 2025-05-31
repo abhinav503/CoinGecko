@@ -1,4 +1,3 @@
-import 'package:coingecko/core/colors.dart';
 import 'package:coingecko/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +14,7 @@ void main() async {
           (context, child) => MaterialApp(
             onGenerateRoute:
                 kIsWeb ? Routes.generateRouteWeb : Routes.generateRouteMobile,
-            theme: ThemeData(
-              textTheme: textTheme(),
-              cardColor: greenShade400,
-              scaffoldBackgroundColor: whiteColor,
-              indicatorColor: greyColor,
-            ),
+            theme: ThemeData(textTheme: textTheme()),
           ),
     ),
   );

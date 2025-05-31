@@ -61,12 +61,12 @@ class _CoinOverviewState extends State<CoinOverview> {
         if (!kIsWeb) expandedDescriptionWidget,
         InfoTile(
           leading: HugeIcons.strokeRoundedRanking,
-          title: "Rank",
+          title: StringConstants.rank,
           trailing: widget.coinItemEntity.marketCapRank.toString(),
         ),
         InfoTile(
           leading: HugeIcons.strokeRoundedPresentationBarChart01,
-          title: "Market Cap",
+          title: StringConstants.marketCap,
           trailingWidget: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -87,7 +87,7 @@ class _CoinOverviewState extends State<CoinOverview> {
           ),
         ),
         InfoTile(
-          title: "Total Volume",
+          title: StringConstants.totalVolume,
           trailing:
               "${(widget.coinItemEntity.totalVolume! / 1000000).toStringAsFixed(2)} M",
           leading: HugeIcons.strokeRoundedDatabase,
@@ -110,7 +110,7 @@ class _CoinOverviewState extends State<CoinOverview> {
           kIsWeb
               ? SingleChildScrollView(child: mainDataWidget)
               : mainDataWidget,
-          const Text("My Investments"),
+          const Text(StringConstants.myInvestments),
         ],
       ),
     );
