@@ -1,5 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:coingecko/core/enums/market_chart_time_filter.dart';
 import 'package:coingecko/feature/coin_details/domain/entities/coin_details_req_entity.dart';
+import 'package:coingecko/feature/coin_details/domain/entities/coin_item_entity.dart';
+import 'package:coingecko/feature/coin_details/domain/entities/coin_market_data_entity.dart';
 import 'package:coingecko/feature/coin_details/domain/entities/get_coin_market_data_req_entity.dart';
 import 'package:coingecko/feature/coin_details/domain/usecase/get_coin_details_usecase.dart';
 import 'package:coingecko/feature/coin_details/domain/usecase/get_coin_market_data_usecase.dart';
@@ -11,6 +14,10 @@ part 'coin_details_state.dart';
 class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
   final GetCoinDetailsUsecase getCoinDetailsUsecase;
   final GetCoinMarketDataUsecase getCoinMarketDataUsecase;
+  CoinItemEntity? coinItemEntity;
+  CoinMarketDataEntity? coinMarketDataEntity;
+
+  MarketChartTimeFilter currentFilter = MarketChartTimeFilter.oneDay;
   CoinDetailsBloc({
     required this.getCoinDetailsUsecase,
     required this.getCoinMarketDataUsecase,
@@ -27,6 +34,7 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
           // emit(CoinDetailsApiCallState());
         },
         (data) {
+          coinItemEntity = data;
           emit(CoinDetailsApiCallState());
         },
       );
@@ -41,7 +49,7 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
           print(failure);
         },
         (data) {
-          print(data.prices);
+          coinMarketDataEntity = data;
           emit(CoinMarketDataApiCallState());
         },
       );

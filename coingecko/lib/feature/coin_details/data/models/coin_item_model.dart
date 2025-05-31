@@ -7,7 +7,11 @@ class CoinItemModel {
   String? description;
   ImageModel? image;
   int? marketCap;
-
+  double? currentPrice;
+  double? priceChange24h;
+  double? priceChangePercentage24h;
+  double? priceChangePercentage7d;
+  double? priceChangePercentage30d;
   CoinItemModel({
     this.id,
     this.symbol,
@@ -17,6 +21,11 @@ class CoinItemModel {
     this.description,
     this.image,
     this.marketCap,
+    this.currentPrice,
+    this.priceChange24h,
+    this.priceChangePercentage24h,
+    this.priceChangePercentage7d,
+    this.priceChangePercentage30d,
   });
 
   CoinItemModel.fromJson(Map<String, dynamic> json) {
@@ -26,8 +35,31 @@ class CoinItemModel {
     webSlug = json['web_slug'];
     categories = json['categories'].cast<String>();
     description = json['description']['en'];
+    currentPrice = double.parse(
+      json['market_data']['current_price']['usd'].toString(),
+    );
     image = json['image'] != null ? ImageModel.fromJson(json['image']) : null;
     marketCap = json['market_data']['market_cap']['usd'];
+    priceChange24h = double.parse(
+      double.parse(
+        json['market_data']['price_change_24h'].toString(),
+      ).toStringAsFixed(2),
+    );
+    priceChangePercentage24h = double.parse(
+      double.parse(
+        json['market_data']['price_change_percentage_24h'].toString(),
+      ).toStringAsFixed(2),
+    );
+    priceChangePercentage7d = double.parse(
+      double.parse(
+        json['market_data']['price_change_percentage_7d'].toString(),
+      ).toStringAsFixed(2),
+    );
+    priceChangePercentage30d = double.parse(
+      double.parse(
+        json['market_data']['price_change_percentage_30d'].toString(),
+      ).toStringAsFixed(2),
+    );
   }
 }
 

@@ -8,6 +8,7 @@
             "name": "coingecko",
             "request": "launch",
             "type": "dart",
+            "program": "coingecko/lib/main.dart",
             "args": [
               "--dart-define=BASE_URL=https://api.coingecko.com/api/v3/",
               "--dart-define=COINGECKO_API_KEY=CG-DZYGA8WkGNWJmL6afuToJ3Ct"

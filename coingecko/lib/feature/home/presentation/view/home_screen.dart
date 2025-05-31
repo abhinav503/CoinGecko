@@ -4,7 +4,7 @@ import 'package:coingecko/core/ui/atoms/custom_icon_widget.dart';
 import 'package:coingecko/core/ui/atoms/primary_button.dart';
 import 'package:coingecko/core/ui/molecules/campaign_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_tabbar.dart';
-import 'package:coingecko/feature/home/presentation/widgets/coins_lisview.dart';
+import 'package:coingecko/feature/home/presentation/widgets/coins_listview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';

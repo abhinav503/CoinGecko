@@ -10,6 +10,11 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
   String? description;
   ImageEntity? image;
   int? marketCap;
+  double? currentPrice;
+  double? priceChange24h;
+  double? priceChangePercentage24h;
+  double? priceChangePercentage7d;
+  double? priceChangePercentage30d;
 
   CoinItemEntity({
     this.id,
@@ -20,33 +25,12 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
     this.description,
     this.image,
     this.marketCap,
+    this.currentPrice,
+    this.priceChange24h,
+    this.priceChangePercentage24h,
+    this.priceChangePercentage7d,
+    this.priceChangePercentage30d,
   });
-
-  CoinItemEntity.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    symbol = json['symbol'];
-    name = json['name'];
-    webSlug = json['web_slug'];
-    categories = json['categories'].cast<String>();
-    description = json['description']['en'];
-    image = json['image'] != null ? ImageEntity.fromJson(json['image']) : null;
-    marketCap = json['market_cap'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['symbol'] = this.symbol;
-    data['name'] = this.name;
-    data['web_slug'] = this.webSlug;
-    data['categories'] = this.categories;
-
-    if (this.image != null) {
-      data['image'] = this.image!.toJson();
-    }
-    data['market_cap'] = this.marketCap;
-    return data;
-  }
 
   @override
   CoinItemEntity call(CoinItemModel object) {
@@ -65,7 +49,12 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
                 large: object.image?.large,
               )
               : null,
+      priceChange24h: object.priceChange24h,
+      priceChangePercentage24h: object.priceChangePercentage24h,
+      priceChangePercentage7d: object.priceChangePercentage7d,
+      priceChangePercentage30d: object.priceChangePercentage30d,
       marketCap: object.marketCap,
+      currentPrice: object.currentPrice,
     );
   }
 }
