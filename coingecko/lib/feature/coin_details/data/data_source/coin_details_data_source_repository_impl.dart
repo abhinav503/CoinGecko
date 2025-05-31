@@ -18,7 +18,7 @@ class CoinDetailsDataSourceImpl implements CoinDetailsDataSource {
   ) async {
     final response = await networkRepository.getRequest(
       urlSuffix: 'coins/${coinDetailsReqModel.id}',
-      queries: {'localization': "false"},
+      queries: {'localization': "false", 'precision': '2'},
     );
     return CoinItemModel.fromJson(jsonDecode(response.body));
   }
@@ -32,6 +32,9 @@ class CoinDetailsDataSourceImpl implements CoinDetailsDataSource {
       queries: {
         'vs_currency': getCoinMarketDataReqModel.vsCurrency ?? 'usd',
         'days': getCoinMarketDataReqModel.days ?? '30',
+        if (getCoinMarketDataReqModel.interval != null)
+          'interval': getCoinMarketDataReqModel.interval!,
+        'precision': '2',
       },
     );
     return CoinMarketDataModel.fromJson(jsonDecode(response.body));

@@ -12,3 +12,8 @@ class GetCoinMarketDataEvent extends CoinDetailsEvent {
   final String id;
   GetCoinMarketDataEvent({required this.id});
 }
+
+class UpdateTimeFilterEvent extends CoinDetailsEvent {
+  final MarketChartTimeFilter filter;
+  UpdateTimeFilterEvent({required this.filter});
+}

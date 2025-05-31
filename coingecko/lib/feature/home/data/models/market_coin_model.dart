@@ -26,6 +26,7 @@ class MarketCoinModel {
     currentPrice = double.parse(json['current_price'].toString());
     marketCap = double.parse(json['market_cap'].toString());
     marketCapRank = json['market_cap_rank'];
+
     priceChangePercentage24h = double.parse(
       double.parse(
         json['price_change_percentage_24h'].toString(),

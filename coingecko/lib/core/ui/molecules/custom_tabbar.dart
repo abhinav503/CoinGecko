@@ -1,3 +1,4 @@
+import 'package:coingecko/core/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,8 +10,12 @@ class CustomTabbar extends StatefulWidget {
   final Color? selectedColor;
   final Color? unselectedColor;
   final Color? indicatorColor;
-  final double? fontSize;
-
+  final TextStyle? textStyle;
+  final Decoration? indicator;
+  final EdgeInsets? indicatorPadding;
+  final double height;
+  final bool isScrollable;
+  final TabAlignment tabAlignment;
   const CustomTabbar({
     super.key,
     required this.tabs,
@@ -20,7 +25,12 @@ class CustomTabbar extends StatefulWidget {
     this.selectedColor,
     this.unselectedColor,
     this.indicatorColor,
-    this.fontSize,
+    this.textStyle,
+    this.indicator,
+    this.height = 32,
+    this.isScrollable = true,
+    this.tabAlignment = TabAlignment.start,
+    this.indicatorPadding,
   });
 
   @override
@@ -39,37 +49,36 @@ class _CustomTabbarState extends State<CustomTabbar> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 32.h,
+      height: widget.height,
       child: TabBar(
-        isScrollable: true,
+        isScrollable: widget.isScrollable,
         controller: widget.tabController,
         tabs:
             widget.tabs
                 .map(
-                  (tab) =>
-                      Text(tab, style: Theme.of(context).textTheme.titleSmall),
+                  (tab) => Text(
+                    tab,
+                    style:
+                        widget.textStyle ??
+                        Theme.of(context).textTheme.titleSmall,
+                  ),
                 )
                 .toList(),
-        labelColor: widget.selectedColor ?? Theme.of(context).primaryColor,
+        labelColor: widget.selectedColor ?? AppColors.primaryColor,
         unselectedLabelColor: widget.unselectedColor ?? Colors.grey,
-        indicatorColor: widget.indicatorColor ?? Theme.of(context).primaryColor,
-        indicatorWeight: 2,
+        indicatorColor: widget.indicatorColor ?? AppColors.primaryColor,
         indicatorSize: TabBarIndicatorSize.tab,
-        labelStyle: TextStyle(
-          fontSize: widget.fontSize ?? 16,
-          fontWeight: FontWeight.w600,
-        ),
-        unselectedLabelStyle: TextStyle(
-          fontSize: widget.fontSize ?? 16,
-          fontWeight: FontWeight.w400,
-        ),
-        indicator: BoxDecoration(
-          color: widget.indicatorColor ?? Colors.grey[300],
-          borderRadius: BorderRadius.circular(30),
-        ),
-        indicatorPadding: EdgeInsets.symmetric(vertical: 4.w),
-        tabAlignment: TabAlignment.start,
+        indicator: widget.indicator,
+        indicatorPadding:
+            widget.indicatorPadding ??
+            EdgeInsets.symmetric(vertical: 4.w, horizontal: 10.w),
+        tabAlignment: widget.tabAlignment,
         dividerColor: Colors.transparent,
+        // labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        // unselectedLabelStyle: TextStyle(
+        //   fontSize: 16,
+        //   fontWeight: FontWeight.w400,
+        // ),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         labelPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         splashFactory: NoSplash.splashFactory,

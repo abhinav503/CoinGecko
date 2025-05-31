@@ -12,6 +12,14 @@ class CoinDetailsPage extends StatefulWidget {
 }
 
 class _CoinDetailsPageState extends State<CoinDetailsPage> {
+  String id = "";
+
+  @override
+  void didChangeDependencies() {
+    id = ModalRoute.of(context)!.settings.arguments as String;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +31,7 @@ class _CoinDetailsPageState extends State<CoinDetailsPage> {
                 getCoinDetailsUsecase: sl(),
                 getCoinMarketDataUsecase: sl(),
               ),
-          child: const CoinDetailsScreen(),
+          child: CoinDetailsScreen(id: id),
         ),
       ),
     );

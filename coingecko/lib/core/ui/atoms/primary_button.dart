@@ -8,6 +8,8 @@ class PrimaryButton extends StatelessWidget {
   final double? fontSize;
   final double? height;
   final double? width;
+  final double? radius;
+  final TextStyle? textStyle;
   const PrimaryButton({
     super.key,
     required this.text,
@@ -17,6 +19,8 @@ class PrimaryButton extends StatelessWidget {
     this.fontSize,
     this.height,
     this.width,
+    this.radius,
+    this.textStyle,
   });
 
   @override
@@ -26,14 +30,19 @@ class PrimaryButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: color ?? Colors.yellow,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radius ?? 30),
+        ),
       ),
+
       child: Text(
         text,
-        style: TextStyle(
-          color: textColor ?? Colors.black,
-          fontSize: fontSize ?? 16,
-        ),
+        style:
+            textStyle ??
+            TextStyle(
+              color: textColor ?? Colors.black,
+              fontSize: fontSize ?? 16,
+            ),
       ),
     );
   }

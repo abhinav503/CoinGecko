@@ -1,6 +1,6 @@
 import 'package:coingecko/core/ui/molecules/coin_item_widget.dart';
-import 'package:coingecko/feature/coin_details/presentation/views/coin_details_page.dart';
 import 'package:coingecko/feature/home/domain/entities/market_coin_entity.dart';
+import 'package:coingecko/routes.dart';
 import 'package:flutter/material.dart';
 
 class CoinsListview extends StatelessWidget {
@@ -23,9 +23,10 @@ class CoinsListview extends StatelessWidget {
         return CoinItemWidget(
           coin: coins[index],
           onTap: () {
-            Navigator.push(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(builder: (context) => const CoinDetailsPage()),
+              Routes.coinDetails,
+              arguments: coins[index].id,
             );
           },
         );

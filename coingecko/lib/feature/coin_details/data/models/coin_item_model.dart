@@ -7,8 +7,10 @@ class CoinItemModel {
   String? description;
   ImageModel? image;
   int? marketCap;
+  int? marketCapRank;
   double? currentPrice;
   double? priceChange24h;
+  double? totalVolume;
   double? priceChangePercentage24h;
   double? priceChangePercentage7d;
   double? priceChangePercentage30d;
@@ -21,8 +23,10 @@ class CoinItemModel {
     this.description,
     this.image,
     this.marketCap,
+    this.marketCapRank,
     this.currentPrice,
     this.priceChange24h,
+    this.totalVolume,
     this.priceChangePercentage24h,
     this.priceChangePercentage7d,
     this.priceChangePercentage30d,
@@ -40,6 +44,12 @@ class CoinItemModel {
     );
     image = json['image'] != null ? ImageModel.fromJson(json['image']) : null;
     marketCap = json['market_data']['market_cap']['usd'];
+    marketCapRank = json['market_cap_rank'];
+    totalVolume = double.parse(
+      double.parse(
+        json['market_data']['total_volume']['usd'].toString(),
+      ).toStringAsFixed(2),
+    );
     priceChange24h = double.parse(
       double.parse(
         json['market_data']['price_change_24h'].toString(),

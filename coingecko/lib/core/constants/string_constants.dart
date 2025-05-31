@@ -15,4 +15,8 @@ class StringConstants {
   static const String change24h = "24h Change";
   static const String watchlist = "Watchlist";
   static const String coin = "Coin";
+  static const String overview = "Overview";
+  static const String myInvestments = "My Investments";
+  static const String showMore = "Show More";
+  static const String showLess = "Show Less";
 }

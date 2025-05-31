@@ -6,8 +6,14 @@ class GetCoinMarketDataReqModel
   final String? id;
   final String? vsCurrency;
   final String? days;
+  final String? interval;
 
-  GetCoinMarketDataReqModel({this.id, this.vsCurrency, this.days});
+  GetCoinMarketDataReqModel({
+    this.id,
+    this.vsCurrency,
+    this.days,
+    this.interval,
+  });
 
   @override
   GetCoinMarketDataReqModel call(GetCoinMarketDataReqEntity object) {
@@ -15,6 +21,7 @@ class GetCoinMarketDataReqModel
       id: object.id,
       vsCurrency: object.vsCurrency,
       days: object.days,
+      interval: object.interval,
     );
   }
 }

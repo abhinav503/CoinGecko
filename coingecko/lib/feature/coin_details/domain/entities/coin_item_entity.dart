@@ -10,6 +10,8 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
   String? description;
   ImageEntity? image;
   int? marketCap;
+  int? marketCapRank;
+  double? totalVolume;
   double? currentPrice;
   double? priceChange24h;
   double? priceChangePercentage24h;
@@ -25,6 +27,8 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
     this.description,
     this.image,
     this.marketCap,
+    this.marketCapRank,
+    this.totalVolume,
     this.currentPrice,
     this.priceChange24h,
     this.priceChangePercentage24h,
@@ -54,7 +58,9 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
       priceChangePercentage7d: object.priceChangePercentage7d,
       priceChangePercentage30d: object.priceChangePercentage30d,
       marketCap: object.marketCap,
+      marketCapRank: object.marketCapRank,
       currentPrice: object.currentPrice,
+      totalVolume: object.totalVolume,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:coingecko/core/colors/app_colors.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/ui/atoms/carousel_slider_widget.dart';
 import 'package:coingecko/core/ui/atoms/custom_icon_widget.dart';
@@ -128,6 +129,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         StringConstants.change24h,
                       ],
                       onTabChanged: (index) {},
+                      indicator: BoxDecoration(
+                        color: AppColors.primaryTextColorLight.withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      indicatorPadding: EdgeInsets.symmetric(horizontal: 0.w),
+                      height: 35.h,
                     ),
                     const SizedBox(height: 10),
                     Flexible(

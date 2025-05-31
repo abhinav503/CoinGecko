@@ -1,6 +1,6 @@
 import 'package:coingecko/core/colors.dart';
+import 'package:coingecko/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:coingecko/feature/home/presentation/view/home_page.dart';
 import 'package:coingecko/core/di/injection_container.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,7 +12,7 @@ void main() async {
       minTextAdapt: true,
       builder:
           (context, child) => MaterialApp(
-            home: const HomePage(),
+            onGenerateRoute: Routes.generateRoute,
             theme: ThemeData(
               textTheme: textTheme(),
               cardColor: greenShade400,
@@ -57,5 +57,6 @@ TextTheme textTheme() {
       fontWeight: FontWeight.bold,
       fontFamily: fontFamily,
     ),
+    bodySmall: TextStyle(fontSize: 14, fontFamily: fontFamily),
   );
 }

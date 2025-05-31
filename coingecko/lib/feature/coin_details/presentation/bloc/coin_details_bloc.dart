@@ -22,37 +22,58 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
     required this.getCoinDetailsUsecase,
     required this.getCoinMarketDataUsecase,
   }) : super(CoinDetailsInitial()) {
-    on<CoinDetailsEvent>((event, emit) {});
+    on<GetCoinDetailsEvent>(_onGetCoinDetails);
+    on<GetCoinMarketDataEvent>(_onGetCoinMarketData);
+    on<UpdateTimeFilterEvent>(_onUpdateTimeFilter);
+  }
 
-    on<GetCoinDetailsEvent>((event, emit) async {
-      final result = await getCoinDetailsUsecase(
-        CoinDetailsReqEntity(id: event.id),
-      );
-      result.fold(
-        (failure) {
-          print(failure);
-          // emit(CoinDetailsApiCallState());
-        },
-        (data) {
-          coinItemEntity = data;
-          emit(CoinDetailsApiCallState());
-        },
-      );
-    });
+  void _onUpdateTimeFilter(
+    UpdateTimeFilterEvent event,
+    Emitter<CoinDetailsState> emit,
+  ) {
+    currentFilter = event.filter;
+    emit(CoinDetailsInitial());
+  }
 
-    on<GetCoinMarketDataEvent>((event, emit) async {
-      final result = await getCoinMarketDataUsecase(
-        GetCoinMarketDataReqEntity(id: event.id, vsCurrency: "usd", days: "30"),
-      );
-      result.fold(
-        (failure) {
-          print(failure);
-        },
-        (data) {
-          coinMarketDataEntity = data;
-          emit(CoinMarketDataApiCallState());
-        },
-      );
-    });
+  void _onGetCoinDetails(
+    GetCoinDetailsEvent event,
+    Emitter<CoinDetailsState> emit,
+  ) async {
+    final result = await getCoinDetailsUsecase(
+      CoinDetailsReqEntity(id: event.id),
+    );
+    result.fold(
+      (failure) {
+        print(failure);
+        // emit(CoinDetailsApiCallState());
+      },
+      (data) {
+        coinItemEntity = data;
+        emit(CoinDetailsApiCallState());
+      },
+    );
+  }
+
+  void _onGetCoinMarketData(
+    GetCoinMarketDataEvent event,
+    Emitter<CoinDetailsState> emit,
+  ) async {
+    final result = await getCoinMarketDataUsecase(
+      GetCoinMarketDataReqEntity(
+        id: event.id,
+        vsCurrency: "usd",
+        days: currentFilter.days.toString(),
+        interval: currentFilter.interval,
+      ),
+    );
+    result.fold(
+      (failure) {
+        print(failure);
+      },
+      (data) {
+        coinMarketDataEntity = data;
+        emit(CoinMarketDataApiCallState());
+      },
+    );
   }
 }
