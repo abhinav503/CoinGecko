@@ -8,7 +8,6 @@ class WebAppbar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onPressedBack;
   final Color? backgroundColor;
   final String title;
-  final bool? showBackButton;
   final List<Widget>? actions;
   final bool? showFilter;
   final String? actionIcon;
@@ -23,7 +22,6 @@ class WebAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.onPressedBack,
     this.backgroundColor,
     required this.title,
-    this.showBackButton = true,
     this.actions,
     this.showFilter = true,
     this.actionIcon,
@@ -42,13 +40,8 @@ class WebAppbar extends StatelessWidget implements PreferredSizeWidget {
       child: Container(
         height: height,
         color: backgroundColor ?? WebAppbarColors.appbarBackgroundColor,
-        child: Row(
-          children: [
-            if (showBackButton == true)
-              IconButton(
-                onPressed: onPressedBack,
-                icon: Icon(Icons.arrow_back),
-              ),
+        child: Row(children: [
+            
           ],
         ),
       ),

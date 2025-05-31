@@ -1,5 +1,6 @@
 import 'package:coingecko/core/colors/app_colors.dart';
 import 'package:coingecko/core/ui/atoms/custom_icon_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -33,14 +34,27 @@ class InfoTile extends StatelessWidget {
               : null,
       title: Text(
         title,
-        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-          color: AppColors.primaryTextColorLight,
-        ),
+        style:
+            kIsWeb
+                ? Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: AppColors.primaryTextColorLight,
+                )
+                : Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: AppColors.primaryTextColorLight,
+                ),
       ),
       subtitle: subtitle != null ? Text(subtitle!) : null,
       trailing:
           trailingWidget ??
-          Text(trailing ?? "", style: Theme.of(context).textTheme.titleSmall!),
+          Text(
+            trailing ?? "",
+            style:
+                kIsWeb
+                    ? Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: AppColors.primaryTextColorLight,
+                    )
+                    : Theme.of(context).textTheme.titleSmall!,
+          ),
     );
   }
 }

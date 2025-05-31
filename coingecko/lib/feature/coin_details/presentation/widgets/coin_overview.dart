@@ -35,7 +35,7 @@ class _CoinOverviewState extends State<CoinOverview> {
   @override
   Widget build(BuildContext context) {
     Widget expandedDescriptionWidget = Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -72,16 +72,29 @@ class _CoinOverviewState extends State<CoinOverview> {
             children: [
               Text(
                 "${(widget.coinItemEntity.marketCap! / 10000000).toStringAsFixed(2)} Cr",
-                style: Theme.of(context).textTheme.titleSmall,
+                style:
+                    kIsWeb
+                        ? Theme.of(context).textTheme.bodySmall
+                        : Theme.of(context).textTheme.titleSmall,
               ),
               Text(
                 " (${widget.coinItemEntity.priceChangePercentage24h!}%)",
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color:
-                      widget.coinItemEntity.marketCap! > 0
-                          ? AppColors.successColor
-                          : AppColors.errorColor,
-                ),
+                style:
+                    kIsWeb
+                        ? Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color:
+                              widget.coinItemEntity.marketCap! > 0
+                                  ? AppColors.successColor
+                                  : AppColors.errorColor,
+                          fontWeight: FontWeight.bold,
+                        )
+                        : Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color:
+                              widget.coinItemEntity.marketCap! > 0
+                                  ? AppColors.successColor
+                                  : AppColors.errorColor,
+                          fontWeight: FontWeight.bold,
+                        ),
               ),
             ],
           ),
