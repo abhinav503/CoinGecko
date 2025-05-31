@@ -5,7 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CoinPriceChart extends StatelessWidget {
+class CoinPriceChart extends StatefulWidget {
   final CoinMarketDataEntity marketData;
   final MarketChartTimeFilter selectedFilter;
   final Function(MarketChartTimeFilter) onFilterChanged;
@@ -18,12 +18,22 @@ class CoinPriceChart extends StatelessWidget {
   });
 
   @override
+  State<CoinPriceChart> createState() => _CoinPriceChartState();
+}
+
+class _CoinPriceChartState extends State<CoinPriceChart> {
+  int? currentXValue;
+  double? currentYValue;
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         children: [
-          SizedBox(height: 220.h, child: LineChart(_createLineChartData())),
+          SizedBox(
+            height: 220.h,
+            child: LineChart(_createLineChartData(context)),
+          ),
           SizedBox(height: 20.h),
           _buildFilterButtons(context),
         ],
@@ -36,9 +46,9 @@ class CoinPriceChart extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children:
           MarketChartTimeFilter.values.map((filter) {
-            final isSelected = filter == selectedFilter;
+            final isSelected = filter == widget.selectedFilter;
             return InkWell(
-              onTap: () => onFilterChanged(filter),
+              onTap: () => widget.onFilterChanged(filter),
               splashColor: Colors.transparent,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
@@ -63,15 +73,33 @@ class CoinPriceChart extends StatelessWidget {
     );
   }
 
-  LineChartData _createLineChartData() {
-    final priceData = marketData.prices ?? [];
+  LineChartData _createLineChartData(BuildContext context) {
+    final priceData = widget.marketData.prices ?? [];
     final spots =
         priceData.asMap().entries.map((entry) {
           return FlSpot(entry.key.toDouble(), entry.value.value ?? 0);
         }).toList();
 
     return LineChartData(
-      gridData: const FlGridData(show: false),
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: true,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+        getDrawingHorizontalLine: (value) {
+          return const FlLine(color: Colors.transparent, strokeWidth: 0);
+        },
+        getDrawingVerticalLine: (value) {
+          return FlLine(
+            color:
+                currentXValue == value.toInt()
+                    ? AppColors.primaryColor.withOpacity(0.3)
+                    : Colors.transparent,
+            strokeWidth: 1,
+            dashArray: [5, 5],
+          );
+        },
+      ),
       titlesData: const FlTitlesData(show: false),
       borderData: FlBorderData(show: false),
       lineBarsData: [
@@ -93,6 +121,70 @@ class CoinPriceChart extends StatelessWidget {
           spots.isEmpty
               ? 0
               : spots.map((spot) => spot.y).reduce((a, b) => a > b ? a : b),
+
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          showOnTopOfTheChartBoxArea: true,
+          tooltipRoundedRadius: 8,
+          tooltipHorizontalOffset: -10.w,
+          tooltipPadding: EdgeInsets.only(
+            left: 8.w,
+            right: 8.w,
+            top: 8.h,
+            bottom: 0.h,
+          ),
+          tooltipHorizontalAlignment: FLHorizontalAlignment.left,
+          tooltipMargin: 10.w,
+          tooltipBgColor: Colors.transparent,
+          tooltipBorder: const BorderSide(color: Colors.transparent),
+          getTooltipItems: (touchedSpots) {
+            return touchedSpots
+                .map(
+                  (spot) => LineTooltipItem(
+                    "\$ ${spot.y.toStringAsFixed(2)}",
+                    Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: AppColors.primaryTextColorLight,
+                    ),
+                  ),
+                )
+                .toList();
+          },
+          fitInsideVertically: false,
+          fitInsideHorizontally: true,
+        ),
+        touchCallback: (touch, response) {
+          if (touch is FlPanEndEvent || touch is FlTapUpEvent) {
+            setState(() {
+              currentXValue = null;
+            });
+          } else if (response?.lineBarSpots != null &&
+              response!.lineBarSpots!.isNotEmpty) {
+            setState(() {
+              currentXValue = response.lineBarSpots!.first.x.toInt();
+            });
+          }
+        },
+        // getTouchedSpotIndicator: (
+        //   LineChartBarData barData,
+        //   List<int> spotIndexes,
+        // ) {
+        //   return spotIndexes.map((index) {
+        //     return TouchedSpotIndicatorData(
+        //       FlLine(color: AppColors.primaryColor, strokeWidth: 2),
+        //       FlDotData(
+        //         show: true,
+        //         getDotPainter:
+        //             (spot, percent, barData, index) => FlRadioDotPainter(
+        //               fillColor: AppColors.primaryColor,
+        //               borderColor: AppColors.primaryColor,
+        //               outerRadius: 9,
+        //               innerRadius: 6.4,
+        //             ),
+        //       ),
+        //     );
+        //   }).toList();
+        // },
+      ),
     );
   }
 }

@@ -103,7 +103,7 @@ class _CoinDetailsScreenState extends State<CoinDetailsScreen>
                       ],
                     ),
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 40.h),
                   CoinPriceChart(
                     marketData: getBloc.coinMarketDataEntity!,
                     selectedFilter: getBloc.currentFilter,

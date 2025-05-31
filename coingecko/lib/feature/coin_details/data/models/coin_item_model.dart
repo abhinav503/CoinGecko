@@ -37,7 +37,8 @@ class CoinItemModel {
     symbol = json['symbol'];
     name = json['name'];
     webSlug = json['web_slug'];
-    categories = json['categories'].cast<String>();
+    categories =
+        json['categories'] != null ? json['categories'].cast<String>() : [];
     description = json['description']['en'];
     currentPrice = double.parse(
       json['market_data']['current_price']['usd'].toString(),
