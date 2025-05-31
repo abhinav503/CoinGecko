@@ -10,18 +10,22 @@ class NetworkRepositoryImpl implements NetworkRepository {
     Map<String, String>? headers,
     Map<String, String>? queries,
   }) async {
-    String apiEndpoint = ApiConstants.apiPrefix + urlSuffix;
-    if (queries != null) {
-      apiEndpoint += "?";
-      queries.forEach((key, value) {
-        apiEndpoint += "$key=$value&";
-      });
+    try {
+      String apiEndpoint = ApiConstants.apiPrefix + urlSuffix;
+      if (queries != null) {
+        apiEndpoint += "?";
+        queries.forEach((key, value) {
+          apiEndpoint += "$key=$value&";
+        });
+      }
+      final response = await get(
+        Uri.parse(apiEndpoint),
+        headers: headers ?? {"Accept": "application/json"},
+      );
+      return handleResponse(response);
+    } catch (e) {
+      throw Exception(StringConstants.apiRateLimitExceeded);
     }
-    final response = await get(
-      Uri.parse(apiEndpoint),
-      headers: headers ?? {"Accept": "application/json"},
-    );
-    return handleResponse(response);
   }
 
   handleResponse(Response response) {
@@ -36,6 +40,7 @@ class NetworkRepositoryImpl implements NetworkRepository {
     } else if (response.statusCode == 403) {
       throw Exception(StringConstants.forbidden);
     } else {
+      print("response.statusCode ${response.statusCode}");
       throw Exception(StringConstants.somethingWentWrong);
     }
   }

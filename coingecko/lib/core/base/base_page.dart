@@ -23,10 +23,13 @@ abstract class BasePageState<T extends BasePage> extends State<T> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBar(),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(child: body(context)),
     );
   }
 
   Widget body(BuildContext context);
+
+  PreferredSizeWidget? appBar() => null;
 }

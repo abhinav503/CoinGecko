@@ -136,7 +136,7 @@ class _WebHomeScreenState extends BaseWebScreenState<WebHomeScreen>
                                     onTabChanged: (index) {
                                       // tabController.animateTo(index);
                                     },
-                                    tabController: tabController,
+                                    tabController: infoTabController,
                                   ),
                                 ),
                                 CoinOverview(

@@ -19,15 +19,15 @@ class CustomNetworkImage extends StatelessWidget {
           size: 30.0,
         );
       },
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
-          return child;
+      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+        if (frame == null) {
+          return const CustomIconWidget(
+            icon: HugeIcons.strokeRoundedCoins02,
+            color: Colors.grey,
+            size: 30.0,
+          );
         }
-        return const CustomIconWidget(
-          icon: HugeIcons.strokeRoundedLoading01,
-          color: Colors.grey,
-          size: 30.0,
-        );
+        return child;
       },
     );
   }
