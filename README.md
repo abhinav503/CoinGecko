@@ -62,8 +62,6 @@ flutter run \
   - Switchable time range (7d / 30d)
 - 📜 **Pagination / Infinite Scrolling**:
   - Efficient loading for large lists
-- 🗂️ **Extended Sorting**:
-  - More intuitive sorting on the dashboard
 
 ## 📱 Mobile Screenshots
 
