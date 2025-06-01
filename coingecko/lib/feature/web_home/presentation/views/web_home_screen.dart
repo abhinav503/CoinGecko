@@ -101,7 +101,16 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
                 if (seletedCoinindex == -1) {
                   seletedCoinindex = 0;
                 }
-                webHomeBloc.add(SelectCoinEvent(index: seletedCoinindex));
+                coinDetailsBloc.add(
+                  GetCoinDetailsEvent(
+                    id: homeBloc.marketCoins[seletedCoinindex].id ?? "",
+                  ),
+                );
+                coinDetailsBloc.add(
+                  GetCoinMarketDataEvent(
+                    id: homeBloc.marketCoins[seletedCoinindex].id ?? "",
+                  ),
+                );
               }
             } else if (state is FetchMarketCoinsErrorState) {
               widget.showToast(state.message);
