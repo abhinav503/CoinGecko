@@ -71,6 +71,10 @@ class _WebCoinListviewState extends State<WebCoinListview> {
                   StringConstants.change24h,
                 ],
                 onTabChanged: (index) {},
+                textStyle: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
                 tabController: widget.tabController,
               ),
               Expanded(

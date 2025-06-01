@@ -23,8 +23,22 @@ class CoinOverview extends StatefulWidget {
   State<CoinOverview> createState() => _CoinOverviewState();
 }
 
-class _CoinOverviewState extends State<CoinOverview> {
+class _CoinOverviewState extends State<CoinOverview>
+    with SingleTickerProviderStateMixin {
   bool isDescriptionExpanded = false;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = widget.tabController;
+  }
+
+  @override
+  void dispose() {
+    // Don't dispose the tabController here as it's passed from parent
+    super.dispose();
+  }
 
   void _toggleDescription() {
     setState(() {
@@ -112,13 +126,13 @@ class _CoinOverviewState extends State<CoinOverview> {
       padding: EdgeInsets.only(top: 20.h),
       height:
           kIsWeb
-              ? MediaQuery.of(context).size.height - 180.h
+              ? MediaQuery.of(context).size.height - 190.h
               : isDescriptionExpanded
               ? (widget.coinItemEntity.description!.length / 250) * 200
               : 300.h,
       width: widget.width,
       child: TabBarView(
-        controller: widget.tabController,
+        controller: _tabController,
         children: [
           kIsWeb
               ? SingleChildScrollView(child: mainDataWidget)

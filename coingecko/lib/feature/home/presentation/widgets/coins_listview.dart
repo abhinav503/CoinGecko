@@ -1,6 +1,7 @@
 import 'package:coingecko/core/ui/molecules/coin_item_widget.dart';
 import 'package:coingecko/feature/home/domain/entities/market_coin_entity.dart';
 import 'package:coingecko/routes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CoinsListview extends StatelessWidget {
@@ -23,11 +24,20 @@ class CoinsListview extends StatelessWidget {
         return CoinItemWidget(
           coin: coins[index],
           onTap: () {
-            Navigator.pushNamed(
-              context,
-              Routes.coinDetails,
-              arguments: coins[index].id,
-            );
+            print("onTap: ${coins[index].id} ${kIsWeb}");
+            if (kIsWeb) {
+              Navigator.pushNamed(
+                context,
+                "${Routes.webCoinDetails}/${coins[index].id}",
+                arguments: coins[index].id,
+              );
+            } else {
+              Navigator.pushNamed(
+                context,
+                Routes.coinDetails,
+                arguments: coins[index].id,
+              );
+            }
           },
         );
       },

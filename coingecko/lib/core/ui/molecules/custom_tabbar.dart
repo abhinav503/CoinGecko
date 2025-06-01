@@ -67,11 +67,12 @@ class _CustomTabbarState extends State<CustomTabbar> {
         labelColor: widget.selectedColor ?? AppColors.primaryColor,
         unselectedLabelColor: widget.unselectedColor ?? Colors.grey,
         indicatorColor: widget.indicatorColor ?? AppColors.primaryColor,
+
         indicatorSize: TabBarIndicatorSize.tab,
         indicator: widget.indicator,
         indicatorPadding:
             widget.indicatorPadding ??
-            EdgeInsets.symmetric(vertical: 4.w, horizontal: 10.w),
+            const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
         tabAlignment: widget.tabAlignment,
         dividerColor: Colors.transparent,
         padding: const EdgeInsets.symmetric(horizontal: 16),

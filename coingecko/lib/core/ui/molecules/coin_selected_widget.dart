@@ -22,14 +22,19 @@ class CoinSelectedWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: height ?? 70.h,
-      color:
-          kIsWeb ? WebAppbarColors.appbarBackgroundColor : Colors.transparent,
+      width: kIsWeb ? 400.w : 330.h,
+      decoration: const BoxDecoration(
+        color:
+            kIsWeb ? WebAppbarColors.appbarBackgroundColor : Colors.transparent,
+      ),
       child: ListTile(
         dense: true,
+        contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
         leading: CustomNetworkImage(imageUrl: imageUrl),
         title: Text(
           name,
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+          style: const TextStyle(
+            fontSize: 15,
             color:
                 kIsWeb
                     ? WebAppbarColors.appbarTextColor
@@ -40,23 +45,25 @@ class CoinSelectedWidget extends StatelessWidget {
           children: [
             Text(
               "${symbol.toUpperCase()} ",
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              style: const TextStyle(
+                fontSize: 12,
                 color:
                     kIsWeb
                         ? WebAppbarColors.appbarTextColor
                         : AppColors.primaryTextColor,
               ),
             ),
-            CircleAvatar(
-              radius: 3.r,
+            const CircleAvatar(
+              radius: 3,
               backgroundColor:
                   kIsWeb
                       ? WebAppbarColors.appbarTextColor
                       : AppColors.primaryTextColor,
             ),
-            Text(
+            const Text(
               " ${StringConstants.usd}",
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              style: TextStyle(
+                fontSize: 12,
                 color:
                     kIsWeb
                         ? WebAppbarColors.appbarTextColor

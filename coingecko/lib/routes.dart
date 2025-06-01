@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 
 class Routes {
   static const String home = "/home";
-  static const String coinDetails = "/coin-details";
+  static const String coinDetails = "/coinDetails";
+  static const String webCoinDetails = "/coinDetails";
   static const String webHome = "/webHome";
   static Route<dynamic> generateRouteMobile(RouteSettings settings) {
     switch (settings.name) {
@@ -31,11 +32,21 @@ class Routes {
   }
 
   static Route<dynamic> generateRouteWeb(RouteSettings settings) {
+    final uri = Uri.parse(settings.name!);
+    if (uri.pathSegments.length == 2 && uri.pathSegments[0] == 'coinDetails') {
+      return MaterialPageRoute(
+        builder: (_) => const CoinDetailsPage(),
+        settings: RouteSettings(
+          name: "/coinDetails/${uri.pathSegments[1]}",
+          arguments: uri.pathSegments[1],
+        ),
+      );
+    }
     switch (settings.name) {
       default:
         return MaterialPageRoute(
           builder: (context) => const WebHomePage(),
-          settings: RouteSettings(name: home, arguments: settings.arguments),
+          settings: RouteSettings(name: webHome, arguments: settings.arguments),
         );
     }
   }

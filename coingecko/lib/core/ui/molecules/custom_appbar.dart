@@ -51,7 +51,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                 onPressed: onPressedBack,
                 icon: const Icon(Icons.arrow_back),
               ),
-            if (mainWidget != null) mainWidget!,
+            if (mainWidget != null) Expanded(child: mainWidget!),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:coingecko/core/enums/market_chart_time_filter.dart';
 import 'package:coingecko/core/ui/atoms/primary_chip.dart';
 import 'package:coingecko/feature/coin_details/domain/entities/coin_market_data_entity.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -58,6 +59,7 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
               onTap: () => widget.onFilterChanged(filter, widget.id),
               text: filter.value,
               isSelected: isSelected,
+              width: kIsWeb ? 100.w : null,
             );
           }).toList(),
     );

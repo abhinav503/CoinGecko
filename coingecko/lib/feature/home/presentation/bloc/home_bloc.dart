@@ -41,7 +41,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         },
         (data) {
           marketCoins.addAll(data);
-          print("marketCoins length: ${marketCoins.length}");
           page++;
           emitState(FetchMarketCoinsState());
         },
@@ -49,10 +48,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
   }
 
-  Future<void> _onFetchMarketCoinsEvent(
-    FetchMarketCoinsEvent event,
-    Emitter<HomeState> emit,
-  ) async {}
+  void onNextPageCall() async {
+    paginationScrollController.isLoading = true;
+    add(FetchMarketCoinsEvent());
+  }
 
   @override
   Future<void> close() {

@@ -7,11 +7,13 @@ class PrimaryChip extends StatelessWidget {
   final VoidCallback onTap;
   final String text;
   final bool isSelected;
+  final double? width;
   const PrimaryChip({
     super.key,
     required this.onTap,
     required this.text,
     required this.isSelected,
+    this.width,
   });
 
   @override
@@ -20,6 +22,7 @@ class PrimaryChip extends StatelessWidget {
       onTap: onTap,
       splashColor: Colors.transparent,
       child: Container(
+        // width: width,
         padding:
             !kIsWeb
                 ? EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h)

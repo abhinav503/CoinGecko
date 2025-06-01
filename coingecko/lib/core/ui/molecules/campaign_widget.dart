@@ -12,17 +12,16 @@ class CampaignWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
+        const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               StringConstants.newUserZone,
-              style: Theme.of(context).textTheme.titleSmall,
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
             ),
-            const SizedBox(height: 2),
             Text(
               StringConstants.get100USDbonusOnYourFirstDeposit,
-              style: Theme.of(context).textTheme.titleMedium,
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
           ],
         ),

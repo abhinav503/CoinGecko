@@ -4,7 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CarouselSliderWidget extends StatefulWidget {
   final List<Widget> items;
-  const CarouselSliderWidget({super.key, required this.items});
+  final double height;
+  const CarouselSliderWidget({
+    super.key,
+    required this.items,
+    this.height = 60,
+  });
 
   @override
   State<CarouselSliderWidget> createState() => _CarouselSliderWidgetState();
@@ -19,7 +24,7 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
       children: [
         CarouselSlider(
           options: CarouselOptions(
-            height: 60.h,
+            height: widget.height,
             autoPlay: true,
             aspectRatio: 16 / 9,
             viewportFraction: 1,

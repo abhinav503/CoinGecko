@@ -7,6 +7,7 @@ import 'package:coingecko/core/ui/atoms/primary_button.dart';
 import 'package:coingecko/core/ui/molecules/campaign_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_tabbar.dart';
 import 'package:coingecko/feature/home/presentation/widgets/coins_listview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';
@@ -28,7 +29,7 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
   void initState() {
     getBloc.tabController = TabController(length: 4, vsync: this);
     getBloc.add(FetchMarketCoinsEvent());
-    getBloc.paginationScrollController.init(loadAction: _onNextPageCall);
+    getBloc.paginationScrollController.init(loadAction: getBloc.onNextPageCall);
     super.initState();
   }
 
@@ -50,18 +51,16 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
+                const Column(
                   children: [
                     Row(
                       children: [
                         Text(
                           StringConstants.totalBalance,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleSmall!.copyWith(color: Colors.grey),
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
                         ),
-                        const SizedBox(width: 5),
-                        const CustomIconWidget(
+                        SizedBox(width: 5),
+                        CustomIconWidget(
                           icon: HugeIcons.strokeRoundedMoneyExchange03,
                           color: Colors.green,
                           size: 15.0,
@@ -70,7 +69,10 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                     ),
                     Text(
                       "\$107,39.12",
-                      style: Theme.of(context).textTheme.displayLarge,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
@@ -81,6 +83,7 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
           const Divider(),
           const SizedBox(height: 10),
           const CarouselSliderWidget(
+            height: 60,
             items: [
               CampaignWidget(
                 icon: HugeIcons.strokeRoundedAiNetwork,
@@ -125,21 +128,35 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                       ],
                     ),
                     const SizedBox(height: 10),
-                    CustomTabbar(
-                      tabController: getBloc.tabController!,
-                      tabs: const [
-                        StringConstants.all,
-                        StringConstants.marketCap,
-                        StringConstants.price,
-                        StringConstants.change24h,
-                      ],
-                      onTabChanged: (index) {},
-                      indicator: BoxDecoration(
-                        color: AppColors.primaryTextColorLight.withOpacity(0.4),
-                        borderRadius: BorderRadius.circular(30),
+                    SizedBox(
+                      height: kIsWeb ? 45.h : 35.h,
+                      child: CustomTabbar(
+                        tabController: getBloc.tabController!,
+                        tabs: const [
+                          StringConstants.all,
+                          StringConstants.marketCap,
+                          StringConstants.price,
+                          StringConstants.change24h,
+                        ],
+                        onTabChanged: (index) {},
+                        indicator: BoxDecoration(
+                          color: AppColors.primaryTextColorLight.withOpacity(
+                            0.4,
+                          ),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        indicatorPadding: EdgeInsets.symmetric(
+                          horizontal: 0.w,
+                          vertical: 0,
+                        ),
+                        height: kIsWeb ? 45.h : 45.h,
+                        textStyle:
+                            kIsWeb
+                                ? Theme.of(
+                                  context,
+                                ).textTheme.titleSmall!.copyWith(fontSize: 12)
+                                : null,
                       ),
-                      indicatorPadding: EdgeInsets.symmetric(horizontal: 0.w),
-                      height: 35.h,
                     ),
                     const SizedBox(height: 10),
                     Flexible(
@@ -188,9 +205,4 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
   }
 
   SizedBox _buildEmptyObject() => const SizedBox.shrink();
-
-  _onNextPageCall() async {
-    getBloc.paginationScrollController.isLoading = true;
-    getBloc.add(FetchMarketCoinsEvent());
-  }
 }

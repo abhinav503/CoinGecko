@@ -28,27 +28,35 @@ class CoinItemWidget extends StatelessWidget {
       selected: isSelected,
       title: Text(
         coin.name ?? "",
-        style: Theme.of(context).textTheme.titleMedium,
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+          color: AppColors.primaryTextColor,
+        ),
       ),
       subtitle: Text(
         (coin.symbol ?? "").toUpperCase(),
-        style: Theme.of(context).textTheme.titleSmall,
+        style: const TextStyle(fontSize: 12, color: AppColors.primaryTextColor),
       ),
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
             "${coin.priceChangePercentage24h! > 0 ? "+" : ""}${coin.priceChangePercentage24h}%",
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            style: TextStyle(
               color:
                   coin.priceChangePercentage24h! > 0
                       ? Colors.green
                       : Colors.red,
+              fontSize: 15,
             ),
           ),
           Text(
             "\$${coin.currentPrice}",
-            style: Theme.of(context).textTheme.titleSmall,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.primaryTextColor,
+            ),
           ),
         ],
       ),

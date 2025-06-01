@@ -21,14 +21,11 @@ class CoinDetailsAppbar extends StatelessWidget implements PreferredSizeWidget {
           return CustomAppbar(
             title: "Detauls",
             onPressedBack: onPressedBack,
-            mainWidget: SizedBox(
-              width: kIsWeb ? 100.w : 330.h,
-              child: CoinSelectedWidget(
-                height: 60.h,
-                imageUrl: bloc.coinItemEntity?.image?.small ?? "",
-                name: bloc.coinItemEntity?.name ?? "",
-                symbol: bloc.coinItemEntity?.symbol ?? "",
-              ),
+            mainWidget: CoinSelectedWidget(
+              height: 90,
+              imageUrl: bloc.coinItemEntity?.image?.small ?? "",
+              name: bloc.coinItemEntity?.name ?? "",
+              symbol: bloc.coinItemEntity?.symbol ?? "",
             ),
           );
         },

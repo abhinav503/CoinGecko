@@ -33,7 +33,7 @@ class _WebHomePageState extends BaseWebPageState<WebHomePage> {
         BlocProvider(create: (context) => homeBloc),
         BlocProvider(create: (context) => WebHomeBloc(homeBloc)),
       ],
-      child: const WebHomeScreen(),
+      child: WebHomeScreen(selectedCoin: arguments),
     );
   }
 
