@@ -126,7 +126,7 @@ flutter run \
 1. Clone the repository:
 
 ```bash
-git clone ["https://github.com/abhinav503/CoinGecko.git"]
+git clone "https://github.com/abhinav503/CoinGecko.git"
 cd CoinGecko
 ```
 
