@@ -68,7 +68,7 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     infoTabController = TabController(length: 2, vsync: this);
     homeBloc = BlocProvider.of<HomeBloc>(context);
     webHomeBloc = BlocProvider.of<WebHomeBloc>(context);
@@ -93,6 +93,7 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
         BlocConsumer<HomeBloc, HomeState>(
           listener: (context, state) {
             if (state is FetchMarketCoinsState) {
+              homeBloc.paginationScrollController.isLoading = false;
               int seletedCoinindex = homeBloc.marketCoins.indexWhere(
                 (element) => element.id == widget.selectedCoin,
               );
@@ -121,7 +122,7 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
                 children: [
                   WebCoinListview(
                     coins: homeBloc.marketCoins,
-                    controller: ScrollController(),
+                    paginationController: homeBloc.paginationScrollController,
                     tabController: tabController,
                   ),
                   BlocConsumer<CoinDetailsBloc, CoinDetailsState>(

@@ -23,7 +23,6 @@ class MarketCoinModel {
     symbol = json['symbol'];
     name = json['name'];
     image = json['image'];
-    print("json['current_price']: ${json['current_price']}");
     currentPrice = double.parse(
       (json['current_price'] == null) ? "0" : json['current_price'].toString(),
     );

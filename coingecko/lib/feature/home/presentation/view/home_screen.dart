@@ -135,54 +135,7 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                     SizedBox(
                       height: kIsWeb ? 45.h : 35.h,
                       child: CustomTabbar(
-                        onTap: (index) {
-                          if (getBloc.currentTabIndex != index) {
-                            getBloc.currentOrder =
-                                index == 1 ? "volume_desc" : "market_cap_desc";
-                            getBloc.add(
-                              FetchMarketCoinsEvent(
-                                order: getBloc.currentOrder,
-                                reset: true,
-                              ),
-                            );
-                          } else {
-                            if (index == 0) {
-                              getBloc.currentOrder =
-                                  getBloc.currentOrder == "market_cap_desc"
-                                      ? "market_cap_asc"
-                                      : "market_cap_desc";
-                              getBloc.add(
-                                FetchMarketCoinsEvent(
-                                  order: getBloc.currentOrder,
-                                  reset: true,
-                                ),
-                              );
-                            }
-                            if (index == 1) {
-                              if (getBloc.currentOrder == "volume_desc") {
-                                getBloc.currentOrder = "volume_asc";
-                                getBloc.add(
-                                  FetchMarketCoinsEvent(
-                                    order: getBloc.currentOrder,
-                                    reset: true,
-                                  ),
-                                );
-                              } else {
-                                if (getBloc.currentOrder == "market_cap_desc" ||
-                                    getBloc.currentOrder == "market_cap_asc") {
-                                  getBloc.currentOrder = "volume_desc";
-                                  getBloc.add(
-                                    FetchMarketCoinsEvent(
-                                      order: getBloc.currentOrder,
-                                      reset: true,
-                                    ),
-                                  );
-                                }
-                              }
-                            }
-                          }
-                          getBloc.currentTabIndex = index;
-                        },
+                        onTap: getBloc.onTapMarketCoinsTab,
                         tabController: getBloc.tabController!,
                         tabs: const [
                           StringConstants.all,

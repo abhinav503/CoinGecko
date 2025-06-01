@@ -60,6 +60,34 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     add(FetchMarketCoinsEvent(order: currentOrder));
   }
 
+  onTapMarketCoinsTab(int index) {
+    if (currentTabIndex != index) {
+      currentOrder = index == 1 ? "volume_desc" : "market_cap_desc";
+      add(FetchMarketCoinsEvent(order: currentOrder, reset: true));
+    } else {
+      if (index == 0) {
+        currentOrder =
+            currentOrder == "market_cap_desc"
+                ? "market_cap_asc"
+                : "market_cap_desc";
+        add(FetchMarketCoinsEvent(order: currentOrder, reset: true));
+      }
+      if (index == 1) {
+        if (currentOrder == "volume_desc") {
+          currentOrder = "volume_asc";
+          add(FetchMarketCoinsEvent(order: currentOrder, reset: true));
+        } else {
+          if (currentOrder == "market_cap_desc" ||
+              currentOrder == "market_cap_asc") {
+            currentOrder = "volume_desc";
+            add(FetchMarketCoinsEvent(order: currentOrder, reset: true));
+          }
+        }
+      }
+    }
+    currentTabIndex = index;
+  }
+
   @override
   Future<void> close() {
     paginationScrollController.dispose();

@@ -1,9 +1,11 @@
 import 'package:coingecko/core/constants/string_constants.dart';
+import 'package:coingecko/core/ui/atoms/pagination_controller.dart';
 import 'package:coingecko/core/ui/molecules/coin_item_widget.dart';
 import 'package:coingecko/core/ui/molecules/coin_selected_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_web_tabbar.dart';
 import 'package:coingecko/feature/coin_details/presentation/bloc/coin_details_bloc.dart';
 import 'package:coingecko/feature/home/domain/entities/market_coin_entity.dart';
+import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';
 import 'package:coingecko/feature/web_home/presentation/bloc/web_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,13 +13,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WebCoinListview extends StatefulWidget {
   final List<MarketCoinEntity> coins;
-  final ScrollController controller;
   final TabController tabController;
+  final PaginationScrollController paginationController;
   const WebCoinListview({
     super.key,
     required this.coins,
-    required this.controller,
     required this.tabController,
+    required this.paginationController,
   });
 
   @override
@@ -27,11 +29,13 @@ class WebCoinListview extends StatefulWidget {
 class _WebCoinListviewState extends State<WebCoinListview> {
   late WebHomeBloc webHomeBloc;
   late CoinDetailsBloc coinDetailsBloc;
+  late HomeBloc homeBloc;
   @override
   void initState() {
     super.initState();
     webHomeBloc = BlocProvider.of<WebHomeBloc>(context);
     coinDetailsBloc = BlocProvider.of<CoinDetailsBloc>(context);
+    homeBloc = BlocProvider.of<HomeBloc>(context);
   }
 
   @override
@@ -64,25 +68,22 @@ class _WebCoinListviewState extends State<WebCoinListview> {
               ),
               CustomWebTabbar(
                 height: 64.h,
-                tabs: const [
-                  StringConstants.all,
-                  StringConstants.marketCap,
-                  StringConstants.price,
-                  StringConstants.change24h,
-                ],
-                onTabChanged: (index) {},
+                tabs: const [StringConstants.all, StringConstants.totalVolume],
+                onTap: homeBloc.onTapMarketCoinsTab,
                 textStyle: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
                 tabController: widget.tabController,
+                isScrollable: true,
+                onTabChanged: (index) {},
               ),
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(0),
                   shrinkWrap: true,
                   itemCount: widget.coins.length,
-                  controller: widget.controller,
+                  controller: widget.paginationController.scrollController,
                   itemBuilder: (context, index) {
                     return CoinItemWidget(
                       showLeading: false,
