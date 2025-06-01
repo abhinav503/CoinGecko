@@ -74,9 +74,9 @@ flutter run \
     <td>Mobile Coin Details Page</td>
   </tr>
   <tr>
-    <td><img src="./coingecko/images/1.png" alt="Market Cap Descending" width="360" height="660" /></td>
-    <td><img src="./coingecko/images/2.png" alt="Market Cap Ascending" width="360" height="660" /></td>
-    <td><img src="./coingecko/images/3.png" alt="Coin Details Page" width="360" height="660" /></td>
+    <td><img src="./coingecko/images/1.png" alt="Market Cap Descending" width="460" height="660" /></td>
+    <td><img src="./coingecko/images/2.png" alt="Market Cap Ascending" width="460" height="660" /></td>
+    <td><img src="./coingecko/images/3.png" alt="Coin Details Page" width="460" height="660" /></td>
   </tr>
   <tr>
     <td>Mobile Coin Market Chart with Tooltip</td>
@@ -84,9 +84,9 @@ flutter run \
     <td>Mobile Error State</td>
   </tr>
   <tr>
-    <td><img src="./coingecko/images/4.png" alt="Coin Chart with Tooltip" width="360" height="660" /></td>
-    <td><img src="./coingecko/images/5.png" alt="Coin with Description" width="360" height="660" /></td>
-    <td><img src="./coingecko/images/6.png" alt="Error State" width="360" height="660" /></td>
+    <td><img src="./coingecko/images/4.png" alt="Coin Chart with Tooltip" width="460" height="660" /></td>
+    <td><img src="./coingecko/images/5.png" alt="Coin with Description" width="460" height="660" /></td>
+    <td><img src="./coingecko/images/6.png" alt="Error State" width="460" height="660" /></td>
   </tr>
 </table>
 
