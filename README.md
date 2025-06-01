@@ -171,8 +171,8 @@ lib/
 
 ### Architecture Overview
 
-- **Clean Architecture**: Separation of concerns with distinct layers (presentation, domain, data)
-- **Atomic Design**: UI components organized as atoms, molecules, and organisms
+- **Clean Architecture**: Separation of concerns with distinct layers (PRESENTATION, DOMAIN, DATA)
+- **Atomic Design**: UI components organized as ATOMS, MOLECULES, and ORGANISMS & TEMPLATES
 - **BLoC Pattern**: State management using Flutter BLoC
 - **Reusable Widgets**: ReUsable Widget Across Web/Mobile
 
@@ -189,6 +189,7 @@ lib/
   - Excellent performance with large datasets
 - **flutter_screenutil**: Responsive UI
   - Ensures consistent UI across different screen sizes
+- **get_it**: Dependency Injection
 
 ## 🎨 Design Inspiration
 
