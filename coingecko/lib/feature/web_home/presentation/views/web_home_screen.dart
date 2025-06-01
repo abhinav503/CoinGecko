@@ -11,6 +11,7 @@ import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';
 import 'package:coingecko/feature/home/presentation/view/home_screen.dart';
 import 'package:coingecko/feature/web_home/presentation/bloc/web_home_bloc.dart';
 import 'package:coingecko/feature/web_home/presentation/widgets/web_coin_listview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,7 +31,6 @@ class _WebHomeScreenState extends BaseWebScreenState<WebHomeScreen> {
       builder: (context, constraints) {
         ScreenType screenType = ScreenType.mobileSmall;
         screenType = screenType.getDeviceType(context);
-        print("WebHomeScreen: $screenType");
         return screenType == ScreenType.mobileSmall
             ? const HomeScreen()
             : WebHomeScreenWidget(
@@ -94,23 +94,15 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
           listener: (context, state) {
             if (state is FetchMarketCoinsState) {
               homeBloc.paginationScrollController.isLoading = false;
-              int seletedCoinindex = homeBloc.marketCoins.indexWhere(
-                (element) => element.id == widget.selectedCoin,
-              );
-              if (seletedCoinindex == -1) {
-                seletedCoinindex = 0;
+              if (widget.screenType != ScreenType.mobileSmall) {
+                int seletedCoinindex = homeBloc.marketCoins.indexWhere(
+                  (element) => element.id == widget.selectedCoin,
+                );
+                if (seletedCoinindex == -1) {
+                  seletedCoinindex = 0;
+                }
+                webHomeBloc.add(SelectCoinEvent(index: seletedCoinindex));
               }
-              webHomeBloc.add(SelectCoinEvent(index: seletedCoinindex));
-              coinDetailsBloc.add(
-                GetCoinDetailsEvent(
-                  id: homeBloc.marketCoins[seletedCoinindex].id ?? "",
-                ),
-              );
-              coinDetailsBloc.add(
-                GetCoinMarketDataEvent(
-                  id: homeBloc.marketCoins[seletedCoinindex].id ?? "",
-                ),
-              );
             } else if (state is FetchMarketCoinsErrorState) {
               widget.showToast(state.message);
             }
@@ -159,9 +151,14 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
                                           : MediaQuery.of(context).size.width -
                                               800.w,
                                   child: CoinPriceChart(
+                                    padding: EdgeInsets.only(
+                                      left: 20.w,
+                                      right: 20.w,
+                                      top: 40.h,
+                                    ),
                                     height:
                                         MediaQuery.of(context).size.height -
-                                        300.h,
+                                        340.h,
                                     marketData:
                                         coinDetailsBloc.coinMarketDataEntity!,
                                     selectedFilter:
@@ -173,7 +170,7 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
                                         "",
                                     tooltipTextStyle: Theme.of(
                                       context,
-                                    ).textTheme.titleLarge!.copyWith(
+                                    ).textTheme.titleMedium!.copyWith(
                                       color: WebAppbarColors.headerTextColor,
                                     ),
                                   ),
@@ -194,6 +191,7 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
                                             AppColors.primaryColorLight,
                                         tabAlignment: TabAlignment.fill,
                                         isScrollable: false,
+                                        showIndicator: false,
                                         textStyle: Theme.of(
                                           context,
                                         ).textTheme.titleMedium?.copyWith(
@@ -208,6 +206,7 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
                                           // tabController.animateTo(index);
                                         },
                                         tabController: infoTabController,
+                                        tabWidth: kIsWeb ? 120.w : null,
                                       ),
                                     ),
                                     CoinOverview(

@@ -82,6 +82,7 @@ class _CustomTabbarState extends State<CustomTabbar> {
             widget.tabs
                 .mapIndexed(
                   (index, tab) => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         tab,

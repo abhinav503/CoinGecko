@@ -15,8 +15,6 @@ Future<Either<ApiFailureModel, T>> baseMethodExceptions<T>(
     }
     return await baseMethod();
   } catch (e, stackTrace) {
-    print(e);
-    print(stackTrace);
     return Left(ApiFailureModel(message: e.toString()));
   }
 }

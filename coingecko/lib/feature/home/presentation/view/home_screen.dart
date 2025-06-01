@@ -141,9 +141,7 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                           StringConstants.all,
                           StringConstants.totalVolume,
                         ],
-                        onTabChanged: (index) {
-                          print("onTabChanged called");
-                        },
+                        onTabChanged: (index) {},
                         indicator: BoxDecoration(
                           color: AppColors.primaryTextColorLight.withOpacity(
                             0.4,

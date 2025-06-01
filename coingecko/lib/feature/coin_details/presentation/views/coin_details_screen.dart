@@ -83,6 +83,7 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
                       ),
                       SizedBox(height: 20.h),
                       CustomTabbar(
+                        showIndicator: false,
                         tabAlignment: TabAlignment.fill,
                         isScrollable: false,
                         textStyle: Theme.of(context).textTheme.titleMedium

@@ -17,7 +17,6 @@ class CoinDetailsTile extends StatelessWidget {
       builder: (context, constraints) {
         ScreenType screenType = ScreenType.mobileSmall;
         screenType = screenType.getDeviceType(context);
-        print("CoinDetailsTile: $screenType");
         return screenType == ScreenType.mobileSmall
             ? const SizedBox.shrink()
             : Container(

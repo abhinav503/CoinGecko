@@ -21,8 +21,8 @@ class PrimaryChip extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       splashColor: Colors.transparent,
+      hoverColor: Colors.transparent,
       child: Container(
-        // width: width,
         padding:
             !kIsWeb
                 ? EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h)

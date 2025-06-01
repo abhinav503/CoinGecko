@@ -22,6 +22,7 @@ class CustomWebTabbar extends StatefulWidget {
   final Color? backgroundColor;
   final bool showIndicator;
   final Function(int)? onTap;
+  final double? tabWidth;
   const CustomWebTabbar({
     super.key,
     required this.tabs,
@@ -40,6 +41,7 @@ class CustomWebTabbar extends StatefulWidget {
     this.backgroundColor,
     this.showIndicator = true,
     this.onTap,
+    this.tabWidth,
   });
 
   @override
@@ -86,12 +88,18 @@ class _CustomWebTabbarState extends State<CustomWebTabbar> {
             widget.tabs
                 .mapIndexed(
                   (index, tab) => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        tab,
-                        style:
-                            widget.textStyle ??
-                            Theme.of(context).textTheme.titleSmall,
+                      SizedBox(
+                        width: widget.tabWidth,
+                        child: Text(
+                          tab,
+                          style:
+                              widget.textStyle ??
+                              Theme.of(context).textTheme.titleSmall,
+                          overflow: TextOverflow.clip,
+                        ),
                       ),
                       if (widget.showIndicator)
                         CustomIconWidget(

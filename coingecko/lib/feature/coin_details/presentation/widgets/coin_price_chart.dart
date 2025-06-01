@@ -14,6 +14,7 @@ class CoinPriceChart extends StatefulWidget {
   final MarketChartTimeFilter selectedFilter;
   final double height;
   final TextStyle? tooltipTextStyle;
+  final EdgeInsets? padding;
   final Function(MarketChartTimeFilter, String) onFilterChanged;
 
   const CoinPriceChart({
@@ -24,6 +25,7 @@ class CoinPriceChart extends StatefulWidget {
     required this.onFilterChanged,
     this.height = 220,
     this.tooltipTextStyle,
+    this.padding,
   });
 
   @override
@@ -36,7 +38,7 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: widget.padding ?? EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         children: [
           SizedBox(

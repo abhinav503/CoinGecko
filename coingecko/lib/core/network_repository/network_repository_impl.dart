@@ -40,7 +40,6 @@ class NetworkRepositoryImpl implements NetworkRepository {
     } else if (response.statusCode == 403) {
       throw Exception(StringConstants.forbidden);
     } else {
-      print("response.statusCode ${response.statusCode}");
       throw Exception(StringConstants.somethingWentWrong);
     }
   }

@@ -24,7 +24,6 @@ class CoinsListview extends StatelessWidget {
         return CoinItemWidget(
           coin: coins[index],
           onTap: () {
-            print("onTap: ${coins[index].id} ${kIsWeb}");
             if (kIsWeb) {
               Navigator.pushNamed(
                 context,
