@@ -22,16 +22,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   TextEditingController searchController = TextEditingController();
 
   List<MarketCoinEntity> marketCoins = [];
+  String currentOrder = 'market_cap_desc';
+  int currentTabIndex = 0;
   HomeBloc({required this.getMarketCoinsUsecase}) : super(HomeInitialState()) {
     on<HomeInitialEvent>((event, emitState) {});
 
     on<FetchMarketCoinsEvent>((event, emitState) async {
+      if (event.reset) {
+        page = 1;
+        marketCoins.clear();
+      }
+      currentOrder = event.order;
       final response = await getMarketCoinsUsecase(
         GetMarketCoinsReqEntity(
           vsCurrency: 'usd',
           perPage: limit,
           page: page,
-          order: 'market_cap_desc',
+          order: currentOrder,
           sparkline: false,
         ),
       );
@@ -50,7 +57,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   void onNextPageCall() async {
     paginationScrollController.isLoading = true;
-    add(FetchMarketCoinsEvent());
+    add(FetchMarketCoinsEvent(order: currentOrder));
   }
 
   @override

@@ -19,6 +19,7 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
   double? priceChangePercentage24h;
   double? priceChangePercentage7d;
   double? priceChangePercentage30d;
+  double? priceChangePercentage1y;
 
   CoinItemEntity({
     this.id,
@@ -36,6 +37,7 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
     this.priceChangePercentage24h,
     this.priceChangePercentage7d,
     this.priceChangePercentage30d,
+    this.priceChangePercentage1y,
     this.high24h,
     this.low24h,
   });
@@ -67,6 +69,7 @@ class CoinItemEntity extends Mapper<CoinItemModel, CoinItemEntity> {
       totalVolume: object.totalVolume,
       high24h: object.high24h,
       low24h: object.low24h,
+      priceChangePercentage1y: object.priceChangePercentage1y,
     );
   }
 }

@@ -27,8 +27,12 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
 
   @override
   void initState() {
-    getBloc.tabController = TabController(length: 4, vsync: this);
-    getBloc.add(FetchMarketCoinsEvent());
+    getBloc.tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: getBloc.currentTabIndex,
+    );
+    getBloc.add(FetchMarketCoinsEvent(order: getBloc.currentOrder));
     getBloc.paginationScrollController.init(loadAction: getBloc.onNextPageCall);
     super.initState();
   }
@@ -131,14 +135,62 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                     SizedBox(
                       height: kIsWeb ? 45.h : 35.h,
                       child: CustomTabbar(
+                        onTap: (index) {
+                          if (getBloc.currentTabIndex != index) {
+                            getBloc.currentOrder =
+                                index == 1 ? "volume_desc" : "market_cap_desc";
+                            getBloc.add(
+                              FetchMarketCoinsEvent(
+                                order: getBloc.currentOrder,
+                                reset: true,
+                              ),
+                            );
+                          } else {
+                            if (index == 0) {
+                              getBloc.currentOrder =
+                                  getBloc.currentOrder == "market_cap_desc"
+                                      ? "market_cap_asc"
+                                      : "market_cap_desc";
+                              getBloc.add(
+                                FetchMarketCoinsEvent(
+                                  order: getBloc.currentOrder,
+                                  reset: true,
+                                ),
+                              );
+                            }
+                            if (index == 1) {
+                              if (getBloc.currentOrder == "volume_desc") {
+                                getBloc.currentOrder = "volume_asc";
+                                getBloc.add(
+                                  FetchMarketCoinsEvent(
+                                    order: getBloc.currentOrder,
+                                    reset: true,
+                                  ),
+                                );
+                              } else {
+                                if (getBloc.currentOrder == "market_cap_desc" ||
+                                    getBloc.currentOrder == "market_cap_asc") {
+                                  getBloc.currentOrder = "volume_desc";
+                                  getBloc.add(
+                                    FetchMarketCoinsEvent(
+                                      order: getBloc.currentOrder,
+                                      reset: true,
+                                    ),
+                                  );
+                                }
+                              }
+                            }
+                          }
+                          getBloc.currentTabIndex = index;
+                        },
                         tabController: getBloc.tabController!,
                         tabs: const [
                           StringConstants.all,
-                          StringConstants.marketCap,
-                          StringConstants.price,
-                          StringConstants.change24h,
+                          StringConstants.totalVolume,
                         ],
-                        onTabChanged: (index) {},
+                        onTabChanged: (index) {
+                          print("onTabChanged called");
+                        },
                         indicator: BoxDecoration(
                           color: AppColors.primaryTextColorLight.withOpacity(
                             0.4,
@@ -163,20 +215,6 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                       child: TabBarView(
                         controller: getBloc.tabController,
                         children: [
-                          CoinsListview(
-                            coins: getBloc.marketCoins,
-                            controller:
-                                getBloc
-                                    .paginationScrollController
-                                    .scrollController,
-                          ),
-                          CoinsListview(
-                            coins: getBloc.marketCoins,
-                            controller:
-                                getBloc
-                                    .paginationScrollController
-                                    .scrollController,
-                          ),
                           CoinsListview(
                             coins: getBloc.marketCoins,
                             controller:

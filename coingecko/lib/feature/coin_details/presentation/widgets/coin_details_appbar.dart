@@ -19,10 +19,10 @@ class CoinDetailsAppbar extends StatelessWidget implements PreferredSizeWidget {
         builder: (context, state) {
           final bloc = context.read<CoinDetailsBloc>();
           return CustomAppbar(
-            title: "Detauls",
+            title: "",
             onPressedBack: onPressedBack,
             mainWidget: CoinSelectedWidget(
-              height: 90,
+              height: kIsWeb ? 90 : 70,
               imageUrl: bloc.coinItemEntity?.image?.small ?? "",
               name: bloc.coinItemEntity?.name ?? "",
               symbol: bloc.coinItemEntity?.symbol ?? "",

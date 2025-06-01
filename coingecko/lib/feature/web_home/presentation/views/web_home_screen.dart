@@ -76,7 +76,7 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
     homeBloc.paginationScrollController.init(
       loadAction: homeBloc.onNextPageCall,
     );
-    homeBloc.add(FetchMarketCoinsEvent());
+    homeBloc.add(FetchMarketCoinsEvent(order: homeBloc.currentOrder));
   }
 
   @override

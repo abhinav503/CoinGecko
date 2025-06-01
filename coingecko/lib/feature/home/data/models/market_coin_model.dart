@@ -23,13 +23,19 @@ class MarketCoinModel {
     symbol = json['symbol'];
     name = json['name'];
     image = json['image'];
-    currentPrice = double.parse(json['current_price'].toString());
-    marketCap = double.parse(json['market_cap'].toString());
+    print("json['current_price']: ${json['current_price']}");
+    currentPrice = double.parse(
+      (json['current_price'] == null) ? "0" : json['current_price'].toString(),
+    );
+    marketCap = double.parse(
+      (json['market_cap'] == null) ? "0" : json['market_cap'].toString(),
+    );
     marketCapRank = json['market_cap_rank'];
-
     priceChangePercentage24h = double.parse(
       double.parse(
-        json['price_change_percentage_24h'].toString(),
+        (json['price_change_percentage_24h'] == null)
+            ? "0"
+            : json['price_change_percentage_24h'].toString(),
       ).toStringAsFixed(2),
     );
   }

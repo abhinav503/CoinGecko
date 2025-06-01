@@ -16,6 +16,7 @@ class CoinItemModel {
   double? priceChangePercentage24h;
   double? priceChangePercentage7d;
   double? priceChangePercentage30d;
+  double? priceChangePercentage1y;
   CoinItemModel({
     this.id,
     this.symbol,
@@ -32,6 +33,7 @@ class CoinItemModel {
     this.priceChangePercentage24h,
     this.priceChangePercentage7d,
     this.priceChangePercentage30d,
+    this.priceChangePercentage1y,
   });
 
   CoinItemModel.fromJson(Map<String, dynamic> json) {
@@ -81,6 +83,11 @@ class CoinItemModel {
     priceChangePercentage30d = double.parse(
       double.parse(
         json['market_data']['price_change_percentage_30d'].toString(),
+      ).toStringAsFixed(2),
+    );
+    priceChangePercentage1y = double.parse(
+      double.parse(
+        json['market_data']['price_change_percentage_1y'].toString(),
       ).toStringAsFixed(2),
     );
   }

@@ -73,44 +73,7 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       SizedBox(height: 5.h),
-                      SizedBox(
-                        height: 40,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ProfitLossTextWidget(
-                              value: getBloc.coinItemEntity!.priceChange24h!,
-                              showSign: true,
-                            ),
-                            VerticalDivider(
-                              color: Colors.grey,
-                              indent: 10.h,
-                              endIndent: 10.h,
-                            ),
-                            if (getBloc
-                                    .coinItemEntity!
-                                    .priceChangePercentage24h !=
-                                null)
-                              ProfitLossTextWidget(
-                                value:
-                                    getBloc
-                                        .coinItemEntity!
-                                        .priceChangePercentage24h!,
-                                showSign: false,
-                              ),
-                            VerticalDivider(
-                              color: Colors.grey,
-                              indent: 10.h,
-                              endIndent: 10.h,
-                            ),
-                            Text(
-                              getBloc.currentFilter.titleValue,
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ),
+                      getPriceChangePercentageWidget(),
                       SizedBox(height: 40.h),
                       CoinPriceChart(
                         id: widget.id,
@@ -166,6 +129,55 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
           },
         );
       },
+    );
+  }
+
+  getPriceChangePercentageWidget() {
+    double? priceChange24h = getBloc.coinItemEntity!.priceChange24h!;
+    double? priceChangePercentage24h =
+        getBloc.coinItemEntity!.priceChangePercentage24h!;
+    switch (getBloc.currentFilter) {
+      case MarketChartTimeFilter.oneDay:
+        priceChange24h = getBloc.coinItemEntity!.priceChange24h!;
+        priceChangePercentage24h =
+            getBloc.coinItemEntity!.priceChangePercentage24h!;
+        break;
+      case MarketChartTimeFilter.oneWeek:
+        priceChange24h = getBloc.coinItemEntity!.priceChange24h!;
+        priceChangePercentage24h =
+            getBloc.coinItemEntity!.priceChangePercentage7d!;
+        break;
+      case MarketChartTimeFilter.oneMonth:
+        priceChange24h = getBloc.coinItemEntity!.priceChange24h!;
+        priceChangePercentage24h =
+            getBloc.coinItemEntity!.priceChangePercentage30d!;
+        break;
+      case MarketChartTimeFilter.oneYear:
+        priceChange24h = getBloc.coinItemEntity!.priceChange24h!;
+        priceChangePercentage24h =
+            getBloc.coinItemEntity!.priceChangePercentage1y!;
+        break;
+    }
+    return SizedBox(
+      height: 40,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ProfitLossTextWidget(value: priceChange24h!, showSign: true),
+          VerticalDivider(color: Colors.grey, indent: 10.h, endIndent: 10.h),
+          ProfitLossTextWidget(
+            value: priceChangePercentage24h,
+            showSign: false,
+          ),
+          VerticalDivider(color: Colors.grey, indent: 10.h, endIndent: 10.h),
+          Text(
+            getBloc.currentFilter.titleValue,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+          ),
+        ],
+      ),
     );
   }
 }
