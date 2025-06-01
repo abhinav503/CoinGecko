@@ -6,6 +6,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class CoinPriceChart extends StatefulWidget {
   final CoinMarketDataEntity marketData;
@@ -126,18 +127,30 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
             bottom: 0.h,
           ),
           tooltipHorizontalAlignment: FLHorizontalAlignment.left,
-          tooltipMargin: 10.w,
+          // tooltipMargin: 10.w,
           tooltipBgColor: Colors.transparent,
           tooltipBorder: const BorderSide(color: Colors.transparent),
           getTooltipItems: (touchedSpots) {
             return touchedSpots
                 .map(
                   (spot) => LineTooltipItem(
-                    "\$ ${spot.y.toStringAsFixed(2)}",
+                    getTooltipPriceText(spot.y),
                     widget.tooltipTextStyle ??
-                        Theme.of(context).textTheme.titleSmall!.copyWith(
+                        const TextStyle(
                           color: AppColors.primaryTextColorLight,
+                          fontSize: 12,
                         ),
+                    children: [
+                      TextSpan(
+                        text: getTooltipDateText(spot.x.toInt()),
+                        style:
+                            widget.tooltipTextStyle ??
+                            const TextStyle(
+                              color: AppColors.primaryColor,
+                              fontSize: 12,
+                            ),
+                      ),
+                    ],
                   ),
                 )
                 .toList();
@@ -159,5 +172,16 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
         },
       ),
     );
+  }
+
+  getTooltipPriceText(double y) {
+    return "\$ ${y.toStringAsFixed(2)}\n";
+  }
+
+  getTooltipDateText(int x) {
+    final date = DateTime.fromMillisecondsSinceEpoch(
+      widget.marketData.prices?[x].timestamp ?? 0,
+    );
+    return DateFormat('MMM d, yyyy').format(date);
   }
 }
