@@ -11,6 +11,14 @@ A modern cryptocurrency tracking application built with Flutter, inspired by Coi
 - VS Code or Android Studio
 - Git
 
+### Command To run Code in Debug Mode
+
+```bash
+flutter run \
+ --dart-define=BASE_URL=https://api.coingecko.com/api/v3/ \
+ --dart-define=COINGECKO_API_KEY=CG-DZYGA8WkGNWJmL6afuToJ3Ct
+```
+
 ## 📱 Mobile Screenshots
 
 <table style="width: 100%; text-align: center; border-collapse: collapse;">
