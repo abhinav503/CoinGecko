@@ -19,6 +19,52 @@ flutter run \
  --dart-define=COINGECKO_API_KEY=CG-DZYGA8WkGNWJmL6afuToJ3Ct
 ```
 
+## ✅ All Features Implemented
+
+### 🌐 Common Across Web & Mobile
+
+- ✅ Fully responsive design for desktop, and mobile screens.
+- 🎨 UI styling inspired by **CoinDCX** for modern and intuitive layout.
+- ⚠️ Robust error handling for all API calls to ensure graceful failure states.
+
+---
+
+### 📊 Dashboard Page
+
+- Fetches and displays **10–25 cryptocurrencies** using the [`/coins/markets`](https://www.coingecko.com/api/documentations/v3#/coins/get_coins_markets) endpoint.
+- Each coin shows:
+  - **Name**
+  - **Symbol**
+  - **Current Price (USD)**
+  - **Market Cap**
+  - **24h Price Change (%)**
+- 🔁 **Sorting functionality**: Toggle between ascending and descending market cap.
+- 💰 **Static total balance** and a **banner section** to enhance layout spacing.
+- ➡️ Clicking a coin navigates to its **Coin Detail Page**.
+
+---
+
+### 📄 Coin Details Page
+
+- Displays data from the [`/coins/{id}`](https://www.coingecko.com/api/documentations/v3#/coins/get_coins__id_) endpoint:
+  - **Name**, **Symbol**, **Current Price**, **Market Cap**
+  - 📖 A brief **description**
+- 📈 **Line chart** using [`fl_chart`](https://pub.dev/packages/fl_chart):
+  - Visualizes price history over **7 or 30 days**
+- 🔙 Easy navigation back to the Dashboard Page.
+
+---
+
+### ✨ Bonus Features
+
+- 🧭 **Interactive chart features**:
+  - Hover tooltips showing date and price
+  - Switchable time range (7d / 30d)
+- 📜 **Pagination / Infinite Scrolling**:
+  - Efficient loading for large lists
+- 🗂️ **Extended Sorting**:
+  - More intuitive sorting on the dashboard
+
 ## 📱 Mobile Screenshots
 
 <table style="width: 100%; text-align: center; border-collapse: collapse;">
@@ -166,26 +212,15 @@ The application's UI is inspired by [CoinDCX](https://coindcx.com/trade/MOGUSDT)
 
 ## ⚠️ Known Issues & Assumptions
 
-### Assumptions
-
 - Market Coin API returns duplicate values in ascending order
-- Coin Details Screen price changes are limited to 24-hour data
+- Coin Details Screen price changes are limited to 24-hour data for free tier
 - API rate limits and response times
+- Static Data on few instances
 
-### Areas for Improvement
+### Wanted To Do But Could Do because of Time Crunch
 
 - [ ] Enhanced UI/UX with more data visualization
 - [ ] Additional chart timeframes
-- [ ] Portfolio tracking features
 - [ ] Advanced trading indicators
 - [ ] Real-time notifications
 - [ ] Dark mode support
-- [ ] Mobile responsiveness improvements
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
