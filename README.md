@@ -193,12 +193,7 @@ lib/
 
 ## 🎨 Design Inspiration
 
-The application's UI is inspired by [CoinDCX](https://coindcx.com/trade/MOGUSDT), featuring:
-
-- Clean and modern interface
-- Real-time price updates
-- Interactive charts
-- Responsive layout
+The application's UI is inspired by [CoinDCX](https://coindcx.com/trade/MOGUSDT)
 
 ## 📊 Chart Implementation
 
