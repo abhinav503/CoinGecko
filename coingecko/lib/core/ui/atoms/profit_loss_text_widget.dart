@@ -18,9 +18,9 @@ class ProfitLossTextWidget extends StatelessWidget {
     return Text(
       showSign
           ? value > 0
-              ? "+${PriceFormatter.formatPrice(value)}"
-              : PriceFormatter.formatPrice(value)
-          : "${value > 0 ? "+" : ""} ${PriceFormatter.formatPrice(value)} %",
+              ? "+${PriceFormatter.formatPrice(value, context: context)}"
+              : PriceFormatter.formatPrice(value, context: context)
+          : "${value > 0 ? "+" : ""} ${PriceFormatter.formatPrice(value, context: context)} %",
       style:
           textStyle ??
           Theme.of(context).textTheme.bodyMedium?.copyWith(

@@ -49,7 +49,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }
       final response = await getMarketCoinsUsecase(
         GetMarketCoinsReqEntity(
-          vsCurrency: 'usd',
+          vsCurrency: event.vsCurrency,
           perPage: limit,
           page: page,
           order: currentOrder,

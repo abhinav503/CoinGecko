@@ -3,6 +3,7 @@ class CoinItemModel {
   String? symbol;
   String? name;
   String? webSlug;
+  String? vsCurrency;
   List<String>? categories;
   String? description;
   ImageModel? image;
@@ -22,6 +23,7 @@ class CoinItemModel {
     this.symbol,
     this.name,
     this.webSlug,
+    this.vsCurrency,
     this.categories,
     this.description,
     this.image,
@@ -41,28 +43,29 @@ class CoinItemModel {
     symbol = json['symbol'];
     name = json['name'];
     webSlug = json['web_slug'];
+    vsCurrency = json['vs_currency'];
     categories =
         json['categories'] != null ? json['categories'].cast<String>() : [];
     description = json['description']['en'];
     currentPrice = double.parse(
-      json['market_data']['current_price']['usd'].toString(),
+      json['market_data']['current_price'][vsCurrency ?? 'usd'].toString(),
     );
     image = json['image'] != null ? ImageModel.fromJson(json['image']) : null;
-    marketCap = json['market_data']['market_cap']['usd'];
+    marketCap = json['market_data']['market_cap'][vsCurrency ?? 'usd'];
     marketCapRank = json['market_cap_rank'];
     high24h = double.parse(
       double.parse(
-        json['market_data']['high_24h']['usd'].toString(),
+        json['market_data']['high_24h'][vsCurrency ?? 'usd'].toString(),
       ).toStringAsFixed(2),
     );
     low24h = double.parse(
       double.parse(
-        json['market_data']['low_24h']['usd'].toString(),
+        json['market_data']['low_24h'][vsCurrency ?? 'usd'].toString(),
       ).toStringAsFixed(2),
     );
     totalVolume = double.parse(
       double.parse(
-        json['market_data']['total_volume']['usd'].toString(),
+        json['market_data']['total_volume'][vsCurrency ?? 'usd'].toString(),
       ).toStringAsFixed(2),
     );
     priceChange24h = double.parse(

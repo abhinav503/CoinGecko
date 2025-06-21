@@ -1,3 +1,4 @@
+import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/ui/atoms/pagination_controller.dart';
 import 'package:coingecko/core/ui/molecules/coin_item_widget.dart';
@@ -46,11 +47,17 @@ class _WebCoinListviewState extends State<WebCoinListview> {
           coinDetailsBloc.add(
             GetCoinDetailsEvent(
               id: widget.coins[webHomeBloc.selectedIndex].id ?? "",
+              vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+                Localizations.localeOf(context),
+              ),
             ),
           );
           coinDetailsBloc.add(
             GetCoinMarketDataEvent(
               id: widget.coins[webHomeBloc.selectedIndex].id ?? "",
+              vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+                Localizations.localeOf(context),
+              ),
             ),
           );
         }

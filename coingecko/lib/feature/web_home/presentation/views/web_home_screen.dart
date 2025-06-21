@@ -1,5 +1,6 @@
 import 'package:coingecko/core/base/base_web_screen.dart';
 import 'package:coingecko/core/colors/app_colors.dart';
+import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/enums/screen_type.dart';
 import 'package:coingecko/core/ui/molecules/coin_details_tile.dart';
@@ -73,7 +74,14 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
     homeBloc = BlocProvider.of<HomeBloc>(context);
     webHomeBloc = BlocProvider.of<WebHomeBloc>(context);
     coinDetailsBloc = BlocProvider.of<CoinDetailsBloc>(context);
-    homeBloc.add(FetchMarketCoinsEvent(order: homeBloc.currentOrder));
+    homeBloc.add(
+      FetchMarketCoinsEvent(
+        order: homeBloc.currentOrder,
+        vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+          Localizations.localeOf(context),
+        ),
+      ),
+    );
   }
 
   @override
@@ -100,11 +108,17 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
                 coinDetailsBloc.add(
                   GetCoinDetailsEvent(
                     id: homeBloc.marketCoins[seletedCoinindex].id ?? "",
+                    vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+                      Localizations.localeOf(context),
+                    ),
                   ),
                 );
                 coinDetailsBloc.add(
                   GetCoinMarketDataEvent(
                     id: homeBloc.marketCoins[seletedCoinindex].id ?? "",
+                    vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+                      Localizations.localeOf(context),
+                    ),
                   ),
                 );
               }

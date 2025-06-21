@@ -5,12 +5,14 @@ sealed class CoinDetailsEvent {}
 
 class GetCoinDetailsEvent extends CoinDetailsEvent {
   final String id;
-  GetCoinDetailsEvent({required this.id});
+  final String vsCurrency;
+  GetCoinDetailsEvent({required this.id, required this.vsCurrency});
 }
 
 class GetCoinMarketDataEvent extends CoinDetailsEvent {
   final String id;
-  GetCoinMarketDataEvent({required this.id});
+  final String vsCurrency;
+  GetCoinMarketDataEvent({required this.id, required this.vsCurrency});
 }
 
 class UpdateTimeFilterEvent extends CoinDetailsEvent {

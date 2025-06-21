@@ -1,5 +1,6 @@
 import 'package:coingecko/core/base/base_screen.dart';
 import 'package:coingecko/core/colors/app_colors.dart';
+import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/enums/market_chart_time_filter.dart';
 import 'package:coingecko/core/enums/screen_type.dart';
@@ -27,13 +28,36 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
     with TickerProviderStateMixin {
   CoinDetailsBloc get getBloc => context.read<CoinDetailsBloc>();
   late TabController tabController;
+  bool isInit = true;
 
   @override
   void initState() {
     tabController = TabController(length: 2, vsync: this);
-    getBloc.add(GetCoinDetailsEvent(id: widget.id));
-    getBloc.add(GetCoinMarketDataEvent(id: widget.id));
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (isInit) {
+      getBloc.add(
+        GetCoinDetailsEvent(
+          id: widget.id,
+          vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+            Localizations.localeOf(context),
+          ),
+        ),
+      );
+      getBloc.add(
+        GetCoinMarketDataEvent(
+          id: widget.id,
+          vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+            Localizations.localeOf(context),
+          ),
+        ),
+      );
+      isInit = false;
+    }
   }
 
   @override
@@ -72,6 +96,7 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
                       Text(
                         PriceFormatter.formatPrice(
                           getBloc.coinItemEntity?.currentPrice,
+                          context: context,
                         ),
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
@@ -169,7 +194,10 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
         children: [
           ProfitLossTextWidget(
             value: double.parse(
-              PriceFormatter.formatNumber(priceChange24h).replaceAll(",", ""),
+              PriceFormatter.formatNumber(
+                priceChange24h,
+                context: context,
+              ).replaceAll(",", ""),
             ),
             showSign: true,
           ),

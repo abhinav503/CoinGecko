@@ -1,5 +1,6 @@
 import 'package:coingecko/core/base/base_screen.dart';
 import 'package:coingecko/core/colors/app_colors.dart';
+import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/ui/atoms/carousel_slider_widget.dart';
 import 'package:coingecko/core/ui/atoms/custom_icon_widget.dart';
@@ -24,17 +25,34 @@ class HomeScreen extends BaseScreen {
 
 class _HomeScreenState extends BaseScreenState<HomeScreen>
     with TickerProviderStateMixin {
-  HomeBloc get getBloc => context.read<HomeBloc>();
+  late final HomeBloc homeBloc;
+  bool isInit = true;
 
   @override
   void initState() {
-    getBloc.tabController = TabController(
+    homeBloc = BlocProvider.of<HomeBloc>(context);
+    homeBloc.tabController = TabController(
       length: 3,
       vsync: this,
-      initialIndex: getBloc.currentTabIndex,
+      initialIndex: homeBloc.currentTabIndex,
     );
-    getBloc.add(FetchMarketCoinsEvent(order: getBloc.currentOrder));
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (isInit) {
+      homeBloc.add(
+        FetchMarketCoinsEvent(
+          order: homeBloc.currentOrder,
+          vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+            Localizations.localeOf(context),
+          ),
+        ),
+      );
+      isInit = false;
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -103,7 +121,7 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                 }
               },
               builder: (context, state) {
-                if (getBloc.marketCoins.isEmpty) {
+                if (homeBloc.marketCoins.isEmpty) {
                   return _buildEmptyObject();
                 }
                 return Column(
@@ -112,15 +130,15 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                       height: kIsWeb ? 45.h : 35.h,
                       child: CustomTabbar(
                         icons:
-                            getBloc.tabbarData
+                            homeBloc.tabbarData
                                 .map<IconData>((e) => e["icon"])
                                 .toList(),
                         onTap: (index) {
-                          getBloc.add(
+                          homeBloc.add(
                             UpdateMarketCoinsOrderEvent(index: index),
                           );
                         },
-                        tabController: getBloc.tabController!,
+                        tabController: homeBloc.tabController!,
                         tabs: const [
                           StringConstants.marketCapDesc,
                           StringConstants.currentPrice,
@@ -149,11 +167,11 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                     const SizedBox(height: 10),
                     Flexible(
                       child: TabBarView(
-                        controller: getBloc.tabController,
+                        controller: homeBloc.tabController,
                         children: [
-                          CoinsListview(coins: getBloc.marketCoins),
-                          CoinsListview(coins: getBloc.marketCoins),
-                          CoinsListview(coins: getBloc.marketCoins),
+                          CoinsListview(coins: homeBloc.marketCoins),
+                          CoinsListview(coins: homeBloc.marketCoins),
+                          CoinsListview(coins: homeBloc.marketCoins),
                         ],
                       ),
                     ),
