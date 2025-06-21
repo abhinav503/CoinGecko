@@ -32,7 +32,7 @@ class StringConstants {
   static const String forbidden = "Forbidden";
   static const String usd = "USD";
   static const String rank = "Rank";
-  static const String totalVolume = "Total Volume";
+  static const String totalSupply = "Total Supply";
   static const String aZ = "A-Z";
   static const String marketCapDesc = "Market Cap";
   static const String currentPrice = "Current Price";

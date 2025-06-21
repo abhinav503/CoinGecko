@@ -23,6 +23,7 @@ class CustomWebTabbar extends StatefulWidget {
   final bool showIndicator;
   final Function(int)? onTap;
   final double? tabWidth;
+  final List<IconData>? icons;
   const CustomWebTabbar({
     super.key,
     required this.tabs,
@@ -42,6 +43,7 @@ class CustomWebTabbar extends StatefulWidget {
     this.showIndicator = true,
     this.onTap,
     this.tabWidth,
+    this.icons,
   });
 
   @override
@@ -49,26 +51,12 @@ class CustomWebTabbar extends StatefulWidget {
 }
 
 class _CustomWebTabbarState extends State<CustomWebTabbar> {
-  List<IconData> icons = [];
   @override
   void initState() {
     super.initState();
-    icons = [
-      HugeIcons.strokeRoundedArrowDown02,
-      HugeIcons.strokeRoundedArrowDown02,
-    ];
+
     widget.tabController.addListener(() {
       widget.onTabChanged(widget.tabController.index);
-    });
-  }
-
-  rotateIcon(index) {
-    setState(() {
-      if (icons[index] == HugeIcons.strokeRoundedArrowDown02) {
-        icons[index] = HugeIcons.strokeRoundedArrowUp02;
-      } else {
-        icons[index] = HugeIcons.strokeRoundedArrowDown02;
-      }
     });
   }
 
@@ -82,7 +70,6 @@ class _CustomWebTabbarState extends State<CustomWebTabbar> {
         controller: widget.tabController,
         onTap: (index) {
           widget.onTap?.call(index);
-          rotateIcon(index);
         },
         tabs:
             widget.tabs
@@ -103,9 +90,9 @@ class _CustomWebTabbarState extends State<CustomWebTabbar> {
                       ),
                       if (widget.showIndicator)
                         CustomIconWidget(
-                          icon: icons[index],
+                          icon: widget.icons![index],
                           color: widget.selectedColor ?? AppColors.primaryColor,
-                          size: 16,
+                          size: 20,
                         ),
                     ],
                   ),

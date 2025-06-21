@@ -10,6 +10,13 @@ class MarketCoinEntity extends Mapper<MarketCoinModel, MarketCoinEntity> {
   double? marketCap;
   int? marketCapRank;
   double? priceChangePercentage24h;
+  double? priceChange24h;
+  double? totalSupply;
+  double? priceChangePercentage7d;
+  double? priceChangePercentage30d;
+  double? priceChangePercentage1y;
+  double? high24h;
+  double? low24h;
 
   MarketCoinEntity({
     this.id,
@@ -20,6 +27,13 @@ class MarketCoinEntity extends Mapper<MarketCoinModel, MarketCoinEntity> {
     this.marketCap,
     this.marketCapRank,
     this.priceChangePercentage24h,
+    this.priceChange24h,
+    this.totalSupply,
+    this.priceChangePercentage7d,
+    this.priceChangePercentage30d,
+    this.priceChangePercentage1y,
+    this.high24h,
+    this.low24h,
   });
 
   MarketCoinEntity.fromJson(Map<String, dynamic> json) {
@@ -31,6 +45,10 @@ class MarketCoinEntity extends Mapper<MarketCoinModel, MarketCoinEntity> {
     marketCap = json['market_cap'];
     marketCapRank = json['market_cap_rank'];
     priceChangePercentage24h = json['price_change_percentage_24h'];
+    priceChange24h = json['price_change_24h'];
+    totalSupply = json['total_supply'];
+    high24h = json['high_24h'];
+    low24h = json['low_24h'];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,6 +61,13 @@ class MarketCoinEntity extends Mapper<MarketCoinModel, MarketCoinEntity> {
     data['market_cap'] = marketCap;
     data['market_cap_rank'] = marketCapRank;
     data['price_change_percentage_24h'] = priceChangePercentage24h;
+    data['price_change_24h'] = priceChange24h;
+    data['total_supply'] = totalSupply;
+    data['price_change_percentage_7d'] = priceChangePercentage7d;
+    data['price_change_percentage_30d'] = priceChangePercentage30d;
+    data['price_change_percentage_1y'] = priceChangePercentage1y;
+    data['high_24h'] = high24h;
+    data['low_24h'] = low24h;
     return data;
   }
 
@@ -57,6 +82,10 @@ class MarketCoinEntity extends Mapper<MarketCoinModel, MarketCoinEntity> {
       marketCap: object.marketCap,
       marketCapRank: object.marketCapRank,
       priceChangePercentage24h: object.priceChangePercentage24h,
+      priceChange24h: object.priceChange24h,
+      totalSupply: object.totalSupply,
+      high24h: object.high24h,
+      low24h: object.low24h,
     );
   }
 }

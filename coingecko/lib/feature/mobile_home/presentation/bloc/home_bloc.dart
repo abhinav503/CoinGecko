@@ -43,10 +43,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeInitialEvent>((event, emitState) {});
 
     on<FetchMarketCoinsEvent>((event, emitState) async {
-      if (event.reset) {
-        page = 1;
-        marketCoins.clear();
+      if (marketCoins.isNotEmpty) {
+        emitState(FetchMarketCoinsState());
+        return;
       }
+      print("FetchMarketCoinsEvent =========>");
       final response = await getMarketCoinsUsecase(
         GetMarketCoinsReqEntity(
           vsCurrency: event.vsCurrency,
@@ -72,7 +73,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       _getNextSortOrderFromIndex(index);
       _sortMarketCoins();
       currentTabIndex = index;
-      emitState(FetchMarketCoinsState());
+      emitState(UpdateMarketCoinsOrderState());
     });
   }
 

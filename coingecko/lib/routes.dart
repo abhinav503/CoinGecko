@@ -38,7 +38,7 @@ class Routes {
         builder: (_) => const CoinDetailsPage(),
         settings: RouteSettings(
           name: "/coinDetails/${uri.pathSegments[1]}",
-          arguments: uri.pathSegments[1],
+          arguments: settings.arguments,
         ),
       );
     }

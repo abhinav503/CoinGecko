@@ -26,6 +26,24 @@ class WebHomeScreen extends BaseWebScreen {
 }
 
 class _WebHomeScreenState extends BaseWebScreenState<WebHomeScreen> {
+  bool isInit = true;
+  late HomeBloc homeBloc;
+  late WebHomeBloc webHomeBloc;
+  late CoinDetailsBloc coinDetailsBloc;
+
+  @override
+  void didChangeDependencies() {
+    if (isInit) {
+      homeBloc = BlocProvider.of<HomeBloc>(context);
+      webHomeBloc = BlocProvider.of<WebHomeBloc>(context);
+      coinDetailsBloc = BlocProvider.of<CoinDetailsBloc>(context);
+      Future.delayed(const Duration(seconds: 2), () {
+        isInit = false;
+      });
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget body(BuildContext context) {
     return LayoutBuilder(
@@ -38,6 +56,10 @@ class _WebHomeScreenState extends BaseWebScreenState<WebHomeScreen> {
               screenType: screenType,
               showToast: showToast,
               selectedCoin: widget.selectedCoin,
+              isInit: isInit,
+              homeBloc: homeBloc,
+              webHomeBloc: webHomeBloc,
+              coinDetailsBloc: coinDetailsBloc,
             );
       },
     );
@@ -48,11 +70,19 @@ class WebHomeScreenWidget extends StatefulWidget {
   final ScreenType screenType;
   final Function(String) showToast;
   final String? selectedCoin;
+  final bool isInit;
+  final HomeBloc homeBloc;
+  final WebHomeBloc webHomeBloc;
+  final CoinDetailsBloc coinDetailsBloc;
   const WebHomeScreenWidget({
     super.key,
     required this.screenType,
     required this.showToast,
     this.selectedCoin,
+    required this.isInit,
+    required this.homeBloc,
+    required this.webHomeBloc,
+    required this.coinDetailsBloc,
   });
 
   @override
@@ -61,27 +91,28 @@ class WebHomeScreenWidget extends StatefulWidget {
 
 class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
     with TickerProviderStateMixin {
-  late HomeBloc homeBloc;
-  late WebHomeBloc webHomeBloc;
-  late CoinDetailsBloc coinDetailsBloc;
   late TabController tabController;
   late TabController infoTabController;
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
     infoTabController = TabController(length: 2, vsync: this);
-    homeBloc = BlocProvider.of<HomeBloc>(context);
-    webHomeBloc = BlocProvider.of<WebHomeBloc>(context);
-    coinDetailsBloc = BlocProvider.of<CoinDetailsBloc>(context);
-    homeBloc.add(
-      FetchMarketCoinsEvent(
-        order: homeBloc.currentOrder,
-        vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
-          Localizations.localeOf(context),
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (widget.isInit) {
+      widget.homeBloc.add(
+        FetchMarketCoinsEvent(
+          order: widget.homeBloc.currentOrder,
+          vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+            Localizations.localeOf(context),
+          ),
         ),
-      ),
-    );
+      );
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -96,26 +127,22 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
     return Column(
       children: [
         BlocConsumer<HomeBloc, HomeState>(
+          buildWhen:
+              (previous, current) => current is! UpdateMarketCoinsOrderState,
           listener: (context, state) {
             if (state is FetchMarketCoinsState) {
               if (widget.screenType != ScreenType.mobileSmall) {
-                int seletedCoinindex = homeBloc.marketCoins.indexWhere(
+                int seletedCoinindex = widget.homeBloc.marketCoins.indexWhere(
                   (element) => element.id == widget.selectedCoin,
                 );
                 if (seletedCoinindex == -1) {
                   seletedCoinindex = 0;
                 }
-                coinDetailsBloc.add(
-                  GetCoinDetailsEvent(
-                    id: homeBloc.marketCoins[seletedCoinindex].id ?? "",
-                    vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
-                      Localizations.localeOf(context),
-                    ),
-                  ),
-                );
-                coinDetailsBloc.add(
+                widget.coinDetailsBloc.coinItemEntity =
+                    widget.homeBloc.marketCoins[seletedCoinindex];
+                widget.coinDetailsBloc.add(
                   GetCoinMarketDataEvent(
-                    id: homeBloc.marketCoins[seletedCoinindex].id ?? "",
+                    id: widget.homeBloc.marketCoins[seletedCoinindex].id ?? "",
                     vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
                       Localizations.localeOf(context),
                     ),
@@ -127,119 +154,54 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
             }
           },
           builder: (context, state) {
-            if (homeBloc.marketCoins.isNotEmpty) {
+            if (widget.homeBloc.marketCoins.isNotEmpty) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   WebCoinListview(
-                    coins: homeBloc.marketCoins,
+                    coins: widget.homeBloc.marketCoins,
                     tabController: tabController,
                   ),
-                  BlocConsumer<CoinDetailsBloc, CoinDetailsState>(
-                    listener: (context, state) {
-                      if (state is CoinDetailsApiErrorState) {
-                        widget.showToast(state.message);
-                      }
-                    },
-                    builder: (context, state) {
-                      if (coinDetailsBloc.coinItemEntity != null &&
-                          coinDetailsBloc.coinMarketDataEntity != null) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CoinDetailsTile(
-                                  coin: coinDetailsBloc.coinItemEntity!,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(
-                                    left: 40.w,
-                                    top: 50.h,
-                                  ),
-                                  width:
-                                      [
-                                            ScreenType.mobileSmall,
-                                            ScreenType.mobileLarge,
-                                          ].contains(widget.screenType)
-                                          ? MediaQuery.of(context).size.width -
-                                              400.w
-                                          : MediaQuery.of(context).size.width -
-                                              800.w,
-                                  child: CoinPriceChart(
-                                    padding: EdgeInsets.only(
-                                      left: 20.w,
-                                      right: 20.w,
-                                      top: 40.h,
-                                    ),
-                                    height:
-                                        MediaQuery.of(context).size.height -
-                                        340.h,
-                                    marketData:
-                                        coinDetailsBloc.coinMarketDataEntity!,
-                                    selectedFilter:
-                                        coinDetailsBloc.currentFilter,
-                                    onFilterChanged:
-                                        coinDetailsBloc.onTimeFilterChanged,
-                                    id:
-                                        coinDetailsBloc.coinItemEntity!.id ??
-                                        "",
-                                    tooltipTextStyle: Theme.of(
-                                      context,
-                                    ).textTheme.titleMedium!.copyWith(
-                                      color: WebAppbarColors.headerTextColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            [
-                                  ScreenType.mobileSmall,
-                                  ScreenType.mobileLarge,
-                                ].contains(widget.screenType)
-                                ? const SizedBox.shrink()
-                                : Column(
-                                  children: [
-                                    SizedBox(
-                                      width: 400.w,
-                                      child: CustomWebTabbar(
-                                        backgroundColor:
-                                            AppColors.primaryColorLight,
-                                        tabAlignment: TabAlignment.fill,
-                                        isScrollable: false,
-                                        showIndicator: false,
-                                        textStyle: Theme.of(
-                                          context,
-                                        ).textTheme.titleMedium?.copyWith(
-                                          color: AppColors.primaryColor,
-                                        ),
-                                        height: 60,
-                                        tabs: const [
-                                          StringConstants.overview,
-                                          StringConstants.myInvestments,
-                                        ],
-                                        onTabChanged: (index) {
-                                          // tabController.animateTo(index);
-                                        },
-                                        tabController: infoTabController,
-                                        tabWidth: kIsWeb ? 120.w : null,
-                                      ),
-                                    ),
-                                    CoinOverview(
-                                      width: 400.w,
-                                      coinItemEntity:
-                                          coinDetailsBloc.coinItemEntity!,
-                                      tabController: infoTabController,
-                                    ),
-                                  ],
-                                ),
-                          ],
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          BlocConsumer<CoinDetailsBloc, CoinDetailsState>(
+                            listener: (context, state) {
+                              if (state is CoinDetailsApiErrorState) {
+                                widget.showToast(state.message);
+                              }
+                            },
+                            builder: (context, state) {
+                              if (widget.coinDetailsBloc.coinItemEntity !=
+                                  null) {
+                                return CoinDetailsTile(
+                                  coin: widget.coinDetailsBloc.coinItemEntity!,
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
+                          ),
+                          WebCoinChart(
+                            screenType: widget.screenType,
+                            coinDetailsBloc: widget.coinDetailsBloc,
+                            showToast: widget.showToast,
+                          ),
+                        ],
+                      ),
+                      [
+                            ScreenType.mobileSmall,
+                            ScreenType.mobileLarge,
+                          ].contains(widget.screenType)
+                          ? const SizedBox.shrink()
+                          : CoinInfoWidget(
+                            infoTabController: infoTabController,
+                            coinDetailsBloc: widget.coinDetailsBloc,
+                          ),
+                    ],
                   ),
                 ],
               );
@@ -248,6 +210,142 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
           },
         ),
       ],
+    );
+  }
+}
+
+class WebCoinChart extends StatelessWidget {
+  const WebCoinChart({
+    super.key,
+    required this.screenType,
+    required this.coinDetailsBloc,
+    required this.showToast,
+  });
+  final ScreenType screenType;
+  final CoinDetailsBloc coinDetailsBloc;
+  final Function(String) showToast;
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<CoinDetailsBloc, CoinDetailsState>(
+      listener: (context, state) {
+        if (state is CoinDetailsApiErrorState) {
+          showToast(state.message);
+        }
+      },
+      bloc: coinDetailsBloc,
+      builder: (context, state) {
+        if (state is CoinDetailsApiErrorState) {
+          return SizedBox(
+            height: MediaQuery.of(context).size.height - 340.h,
+            width:
+                [
+                      ScreenType.mobileSmall,
+                      ScreenType.mobileLarge,
+                    ].contains(screenType)
+                    ? MediaQuery.of(context).size.width - 400.w
+                    : MediaQuery.of(context).size.width - 800.w,
+            child: Center(
+              child: Text(
+                state.message,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+          );
+        }
+        if (coinDetailsBloc.isLoading) {
+          return SizedBox(
+            height: MediaQuery.of(context).size.height - 340.h,
+            width:
+                [
+                      ScreenType.mobileSmall,
+                      ScreenType.mobileLarge,
+                    ].contains(screenType)
+                    ? MediaQuery.of(context).size.width - 400.w
+                    : MediaQuery.of(context).size.width - 800.w,
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (coinDetailsBloc.coinMarketDataEntity == null ||
+            coinDetailsBloc.coinItemEntity == null) {
+          return const SizedBox.shrink();
+        }
+        return Container(
+          padding: EdgeInsets.only(left: 40.w, top: 50.h),
+          width:
+              [
+                    ScreenType.mobileSmall,
+                    ScreenType.mobileLarge,
+                  ].contains(screenType)
+                  ? MediaQuery.of(context).size.width - 400.w
+                  : MediaQuery.of(context).size.width - 800.w,
+          child: CoinPriceChart(
+            padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 40.h),
+            height: MediaQuery.of(context).size.height - 340.h,
+            marketData: coinDetailsBloc.coinMarketDataEntity!,
+            selectedFilter: coinDetailsBloc.currentFilter,
+            onFilterChanged: coinDetailsBloc.onTimeFilterChanged,
+            id: coinDetailsBloc.coinItemEntity!.id ?? "",
+            tooltipTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: WebAppbarColors.headerTextColor,
+            ),
+            coin: coinDetailsBloc.coinItemEntity!,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class CoinInfoWidget extends StatelessWidget {
+  const CoinInfoWidget({
+    super.key,
+    required this.infoTabController,
+    required this.coinDetailsBloc,
+  });
+
+  final TabController infoTabController;
+  final CoinDetailsBloc coinDetailsBloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CoinDetailsBloc, CoinDetailsState>(
+      bloc: coinDetailsBloc,
+      builder: (context, state) {
+        if (coinDetailsBloc.coinItemEntity == null) {
+          return const SizedBox.shrink();
+        }
+        return Column(
+          children: [
+            SizedBox(
+              width: 400.w,
+              child: CustomWebTabbar(
+                backgroundColor: AppColors.primaryColorLight,
+                tabAlignment: TabAlignment.start,
+                isScrollable: true,
+                showIndicator: false,
+                textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: AppColors.primaryColor,
+                ),
+                height: 60,
+                tabs: const [
+                  StringConstants.overview,
+                  StringConstants.myInvestments,
+                ],
+                onTabChanged: (index) {
+                  // tabController.animateTo(index);
+                },
+                tabController: infoTabController,
+                tabWidth: kIsWeb ? 120.w : null,
+              ),
+            ),
+            CoinOverview(
+              width: 400.w,
+              coinItemEntity: coinDetailsBloc.coinItemEntity!,
+              tabController: infoTabController,
+            ),
+          ],
+        );
+      },
     );
   }
 }

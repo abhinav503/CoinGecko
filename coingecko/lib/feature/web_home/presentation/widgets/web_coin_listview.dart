@@ -44,22 +44,16 @@ class _WebCoinListviewState extends State<WebCoinListview> {
     return BlocConsumer<WebHomeBloc, WebHomeState>(
       listener: (context, state) {
         if (state is SelectedCoinState) {
-          coinDetailsBloc.add(
-            GetCoinDetailsEvent(
-              id: widget.coins[webHomeBloc.selectedIndex].id ?? "",
-              vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
-                Localizations.localeOf(context),
+          if (state.runApis) {
+            coinDetailsBloc.add(
+              GetCoinMarketDataEvent(
+                id: widget.coins[webHomeBloc.selectedIndex].id ?? "",
+                vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+                  Localizations.localeOf(context),
+                ),
               ),
-            ),
-          );
-          coinDetailsBloc.add(
-            GetCoinMarketDataEvent(
-              id: widget.coins[webHomeBloc.selectedIndex].id ?? "",
-              vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
-                Localizations.localeOf(context),
-              ),
-            ),
-          );
+            );
+          }
         }
       },
       builder: (context, state) {
@@ -75,9 +69,18 @@ class _WebCoinListviewState extends State<WebCoinListview> {
               ),
               CustomWebTabbar(
                 height: 64.h,
-                tabs: const [StringConstants.all, StringConstants.totalVolume],
+                icons:
+                    homeBloc.tabbarData
+                        .map<IconData>((e) => e["icon"])
+                        .toList(),
+                tabs: const [
+                  StringConstants.marketCapDesc,
+                  StringConstants.currentPrice,
+                  StringConstants.aZ,
+                ],
                 onTap: (index) {
                   homeBloc.add(UpdateMarketCoinsOrderEvent(index: index));
+                  webHomeBloc.add(SelectCoinEvent(index: 0, runApis: true));
                 },
                 textStyle: const TextStyle(
                   fontSize: 12,
@@ -98,7 +101,13 @@ class _WebCoinListviewState extends State<WebCoinListview> {
                       isSelected: webHomeBloc.selectedIndex == index,
                       coin: widget.coins[index],
                       onTap: () {
-                        webHomeBloc.add(SelectCoinEvent(index: index));
+                        bool runApis = true;
+                        if (webHomeBloc.selectedIndex == index) {
+                          runApis = false;
+                        }
+                        webHomeBloc.add(
+                          SelectCoinEvent(index: index, runApis: runApis),
+                        );
                       },
                     );
                   },

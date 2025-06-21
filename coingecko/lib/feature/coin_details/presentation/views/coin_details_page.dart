@@ -3,6 +3,7 @@ import 'package:coingecko/core/di/injection_container.dart';
 import 'package:coingecko/feature/coin_details/presentation/bloc/coin_details_bloc.dart';
 import 'package:coingecko/feature/coin_details/presentation/views/coin_details_screen.dart';
 import 'package:coingecko/feature/coin_details/presentation/widgets/coin_details_appbar.dart';
+import 'package:coingecko/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,16 +15,27 @@ class CoinDetailsPage extends BasePage {
 }
 
 class _CoinDetailsPageState extends BasePageState<CoinDetailsPage> {
-  final bloc = CoinDetailsBloc(
-    getCoinDetailsUsecase: sl(),
-    getCoinMarketDataUsecase: sl(),
-  );
+  final bloc = CoinDetailsBloc(getCoinMarketDataUsecase: sl());
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (arguments == null) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Routes.webHome,
+          (route) => false,
+        );
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget body(BuildContext context) {
     return BlocProvider(
       create: (context) => bloc,
-      child: CoinDetailsScreen(id: arguments),
+      child: CoinDetailsScreen(coin: arguments),
     );
   }
 

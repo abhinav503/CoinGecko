@@ -11,14 +11,15 @@ import 'package:coingecko/core/utils/price_formatter.dart';
 import 'package:coingecko/feature/coin_details/presentation/bloc/coin_details_bloc.dart';
 import 'package:coingecko/feature/coin_details/presentation/widgets/coin_overview.dart';
 import 'package:coingecko/feature/coin_details/presentation/widgets/coin_price_chart.dart';
+import 'package:coingecko/feature/mobile_home/domain/entities/market_coin_entity.dart';
 import 'package:coingecko/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CoinDetailsScreen extends BaseScreen {
-  final String id;
-  const CoinDetailsScreen({super.key, required this.id});
+  final MarketCoinEntity coin;
+  const CoinDetailsScreen({super.key, required this.coin});
 
   @override
   State<CoinDetailsScreen> createState() => _CoinDetailsScreenState();
@@ -33,6 +34,7 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
   @override
   void initState() {
     tabController = TabController(length: 2, vsync: this);
+    getBloc.coinItemEntity = widget.coin;
     super.initState();
   }
 
@@ -41,16 +43,8 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
     super.didChangeDependencies();
     if (isInit) {
       getBloc.add(
-        GetCoinDetailsEvent(
-          id: widget.id,
-          vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
-            Localizations.localeOf(context),
-          ),
-        ),
-      );
-      getBloc.add(
         GetCoinMarketDataEvent(
-          id: widget.id,
+          id: widget.coin.id ?? "",
           vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
             Localizations.localeOf(context),
           ),
@@ -68,12 +62,12 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
         screenType = screenType.getDeviceType(context);
         if ([ScreenType.desktop, ScreenType.tablet].contains(screenType)) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.webHome,
-              arguments: widget.id,
-              (route) => false,
-            );
+            // Navigator.pushNamedAndRemoveUntil(
+            //   context,
+            //   Routes.webHome,
+            //   arguments: widget.id,
+            //   (route) => false,
+            // );
           });
         }
         return BlocConsumer<CoinDetailsBloc, CoinDetailsState>(
@@ -104,10 +98,11 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
                       getPriceChangePercentageWidget(),
                       SizedBox(height: 40.h),
                       CoinPriceChart(
-                        id: widget.id,
+                        id: widget.coin.id ?? "",
                         marketData: getBloc.coinMarketDataEntity!,
                         selectedFilter: getBloc.currentFilter,
                         onFilterChanged: getBloc.onTimeFilterChanged,
+                        coin: widget.coin,
                       ),
                       SizedBox(height: 20.h),
                       CustomTabbar(
@@ -174,17 +169,17 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
       case MarketChartTimeFilter.oneWeek:
         priceChange24h = getBloc.coinItemEntity!.priceChange24h!;
         priceChangePercentage24h =
-            getBloc.coinItemEntity!.priceChangePercentage7d!;
+            getBloc.coinItemEntity!.priceChangePercentage7d ?? 0.0;
         break;
       case MarketChartTimeFilter.oneMonth:
         priceChange24h = getBloc.coinItemEntity!.priceChange24h!;
         priceChangePercentage24h =
-            getBloc.coinItemEntity!.priceChangePercentage30d!;
+            getBloc.coinItemEntity!.priceChangePercentage30d ?? 0.0;
         break;
       case MarketChartTimeFilter.oneYear:
         priceChange24h = getBloc.coinItemEntity!.priceChange24h!;
         priceChangePercentage24h =
-            getBloc.coinItemEntity!.priceChangePercentage1y!;
+            getBloc.coinItemEntity!.priceChangePercentage1y ?? 0.0;
         break;
     }
     return SizedBox(

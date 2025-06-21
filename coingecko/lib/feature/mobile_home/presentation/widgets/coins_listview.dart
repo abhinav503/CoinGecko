@@ -25,13 +25,13 @@ class CoinsListview extends StatelessWidget {
               Navigator.pushNamed(
                 context,
                 "${Routes.webCoinDetails}/${coins[index].id}",
-                arguments: coins[index].id,
+                arguments: coins[index],
               );
             } else {
               Navigator.pushNamed(
                 context,
                 Routes.coinDetails,
-                arguments: coins[index].id,
+                arguments: coins[index],
               );
             }
           },

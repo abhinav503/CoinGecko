@@ -2,7 +2,6 @@ import 'package:coingecko/feature/coin_details/data/data_source/coin_details_dat
 import 'package:coingecko/feature/coin_details/data/data_source/coin_details_data_source_repository_impl.dart';
 import 'package:coingecko/feature/coin_details/data/repository_impl/coin_details_repository_impl.dart';
 import 'package:coingecko/feature/coin_details/domain/repository/coin_details_repository.dart';
-import 'package:coingecko/feature/coin_details/domain/usecase/get_coin_details_usecase.dart';
 import 'package:coingecko/feature/coin_details/domain/usecase/get_coin_market_data_usecase.dart';
 import 'package:coingecko/feature/mobile_home/data/data_source/home_data_source_repository.dart';
 import 'package:coingecko/feature/mobile_home/data/data_source/home_data_source_repository_impl.dart';
@@ -36,10 +35,6 @@ Future<void> injectionContainer() async {
 
   sl.registerLazySingleton<GetMarketCoinsUsecase>(
     () => GetMarketCoinsUsecase(homeRepository: sl()),
-  );
-
-  sl.registerLazySingleton<GetCoinDetailsUsecase>(
-    () => GetCoinDetailsUsecase(coinDetailsRepository: sl()),
   );
 
   sl.registerLazySingleton<GetCoinMarketDataUsecase>(

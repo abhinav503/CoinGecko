@@ -1,15 +1,14 @@
 import 'package:coingecko/core/colors/app_colors.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
-import 'package:coingecko/core/ui/atoms/primary_text_button.dart';
 import 'package:coingecko/core/ui/molecules/info_tile.dart';
-import 'package:coingecko/feature/coin_details/domain/entities/coin_item_entity.dart';
+import 'package:coingecko/feature/mobile_home/domain/entities/market_coin_entity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class CoinOverview extends StatefulWidget {
-  final CoinItemEntity coinItemEntity;
+  final MarketCoinEntity coinItemEntity;
   final TabController tabController;
   final double? width;
   const CoinOverview({
@@ -40,39 +39,10 @@ class _CoinOverviewState extends State<CoinOverview>
     super.dispose();
   }
 
-  void _toggleDescription() {
-    setState(() {
-      isDescriptionExpanded = !isDescriptionExpanded;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    Widget expandedDescriptionWidget = Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.coinItemEntity.description!,
-            style: Theme.of(context).textTheme.bodySmall,
-            maxLines: isDescriptionExpanded ? null : 3,
-            overflow: isDescriptionExpanded ? null : TextOverflow.ellipsis,
-          ),
-          if (widget.coinItemEntity.description!.length > 150)
-            PrimaryTextButton(
-              onPressed: _toggleDescription,
-              text:
-                  isDescriptionExpanded
-                      ? StringConstants.showLess
-                      : StringConstants.showMore,
-            ),
-        ],
-      ),
-    );
     Widget mainDataWidget = Column(
       children: [
-        if (!kIsWeb) expandedDescriptionWidget,
         InfoTile(
           leading: HugeIcons.strokeRoundedRanking,
           title: StringConstants.rank,
@@ -114,22 +84,16 @@ class _CoinOverviewState extends State<CoinOverview>
           ),
         ),
         InfoTile(
-          title: StringConstants.totalVolume,
+          title: StringConstants.totalSupply,
           trailing:
-              "${(widget.coinItemEntity.totalVolume! / 1000000).toStringAsFixed(2)} M",
+              "${(widget.coinItemEntity.totalSupply! / 1000000).toStringAsFixed(2)} M",
           leading: HugeIcons.strokeRoundedDatabase,
         ),
-        if (kIsWeb) expandedDescriptionWidget,
       ],
     );
     Widget mainWidget = Container(
       padding: EdgeInsets.only(top: 20.h),
-      height:
-          kIsWeb
-              ? MediaQuery.of(context).size.height - 190.h
-              : isDescriptionExpanded
-              ? (widget.coinItemEntity.description!.length / 250) * 200
-              : 300.h,
+      height: kIsWeb ? MediaQuery.of(context).size.height - 190.h : 300.h,
       width: widget.width,
       child: TabBarView(
         controller: _tabController,

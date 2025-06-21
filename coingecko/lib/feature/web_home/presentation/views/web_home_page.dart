@@ -18,20 +18,17 @@ class WebHomePage extends BaseWebPage {
 
 class _WebHomePageState extends BaseWebPageState<WebHomePage> {
   final homeBloc = HomeBloc(getMarketCoinsUsecase: sl());
+  final coinDetailsBloc = CoinDetailsBloc(getCoinMarketDataUsecase: sl());
 
   @override
   Widget body(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create:
-              (context) => CoinDetailsBloc(
-                getCoinDetailsUsecase: sl(),
-                getCoinMarketDataUsecase: sl(),
-              ),
-        ),
+        BlocProvider(create: (context) => coinDetailsBloc),
         BlocProvider(create: (context) => homeBloc),
-        BlocProvider(create: (context) => WebHomeBloc(homeBloc)),
+        BlocProvider(
+          create: (context) => WebHomeBloc(homeBloc, coinDetailsBloc),
+        ),
       ],
       child: WebHomeScreen(selectedCoin: arguments),
     );
