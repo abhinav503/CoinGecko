@@ -85,6 +85,7 @@ class _CustomTabbarState extends State<CustomTabbar> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
+                        key: Key("custom_tabbar_text_$index"),
                         tab,
                         style:
                             widget.textStyle ??

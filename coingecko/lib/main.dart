@@ -4,10 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:coingecko/core/di/injection_container.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-void main() async {
-  injectionContainer();
-  runApp(
-    ScreenUtilInit(
+void main(List<String> args) async {
+  await injectionContainer();
+  if (!args.contains("testEnv")) {
+    runApp(const MainApp());
+  }
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScreenUtilInit(
       designSize: kIsWeb ? const Size(1920, 1080) : const Size(375, 812),
       minTextAdapt: true,
       builder:
@@ -16,8 +25,8 @@ void main() async {
                 kIsWeb ? Routes.generateRouteWeb : Routes.generateRouteMobile,
             theme: ThemeData(textTheme: textTheme()),
           ),
-    ),
-  );
+    );
+  }
 }
 
 TextTheme textTheme() {

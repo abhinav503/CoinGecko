@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';
+import 'package:coingecko/feature/mobile_home/presentation/bloc/home_bloc.dart';
 import 'package:meta/meta.dart';
 
 part 'web_home_event.dart';

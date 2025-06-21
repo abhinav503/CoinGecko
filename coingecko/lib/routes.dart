@@ -1,5 +1,5 @@
 import 'package:coingecko/feature/coin_details/presentation/views/coin_details_page.dart';
-import 'package:coingecko/feature/home/presentation/view/home_page.dart';
+import 'package:coingecko/feature/mobile_home/presentation/view/home_page.dart';
 import 'package:coingecko/feature/web_home/presentation/views/web_home_page.dart';
 import 'package:flutter/material.dart';
 
