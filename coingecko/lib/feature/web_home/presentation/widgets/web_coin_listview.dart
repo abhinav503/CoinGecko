@@ -1,5 +1,6 @@
 import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
+import 'package:coingecko/core/enums/market_chart_time_filter.dart';
 import 'package:coingecko/core/ui/atoms/pagination_controller.dart';
 import 'package:coingecko/core/ui/molecules/coin_item_widget.dart';
 import 'package:coingecko/core/ui/molecules/coin_selected_widget.dart';
@@ -105,6 +106,8 @@ class _WebCoinListviewState extends State<WebCoinListview> {
                         if (webHomeBloc.selectedIndex == index) {
                           runApis = false;
                         }
+                        coinDetailsBloc.currentFilter =
+                            MarketChartTimeFilter.oneYear;
                         webHomeBloc.add(
                           SelectCoinEvent(index: index, runApis: runApis),
                         );
