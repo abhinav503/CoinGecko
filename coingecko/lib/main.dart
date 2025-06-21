@@ -1,23 +1,40 @@
+import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:coingecko/core/di/injection_container.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-void main() async {
-  injectionContainer();
-  runApp(
-    ScreenUtilInit(
+void main(List<String> args) async {
+  await injectionContainer();
+  if (!args.contains("testEnv")) {
+    runApp(const MainApp());
+  }
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScreenUtilInit(
       designSize: kIsWeb ? const Size(1920, 1080) : const Size(375, 812),
       minTextAdapt: true,
       builder:
           (context, child) => MaterialApp(
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: CurrencyConstants.getSupportedLocales(),
             onGenerateRoute:
                 kIsWeb ? Routes.generateRouteWeb : Routes.generateRouteMobile,
             theme: ThemeData(textTheme: textTheme()),
           ),
-    ),
-  );
+    );
+  }
 }
 
 TextTheme textTheme() {

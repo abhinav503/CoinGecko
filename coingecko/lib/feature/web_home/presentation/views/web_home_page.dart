@@ -2,7 +2,7 @@ import 'package:coingecko/core/base/base_web_page.dart';
 import 'package:coingecko/core/di/injection_container.dart';
 import 'package:coingecko/core/ui/molecules/web_appbar.dart';
 import 'package:coingecko/feature/coin_details/presentation/bloc/coin_details_bloc.dart';
-import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';
+import 'package:coingecko/feature/mobile_home/presentation/bloc/home_bloc.dart';
 import 'package:coingecko/feature/web_home/presentation/bloc/web_home_bloc.dart';
 import 'package:coingecko/feature/web_home/presentation/views/web_home_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,20 +18,17 @@ class WebHomePage extends BaseWebPage {
 
 class _WebHomePageState extends BaseWebPageState<WebHomePage> {
   final homeBloc = HomeBloc(getMarketCoinsUsecase: sl());
+  final coinDetailsBloc = CoinDetailsBloc(getCoinMarketDataUsecase: sl());
 
   @override
   Widget body(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create:
-              (context) => CoinDetailsBloc(
-                getCoinDetailsUsecase: sl(),
-                getCoinMarketDataUsecase: sl(),
-              ),
-        ),
+        BlocProvider(create: (context) => coinDetailsBloc),
         BlocProvider(create: (context) => homeBloc),
-        BlocProvider(create: (context) => WebHomeBloc(homeBloc)),
+        BlocProvider(
+          create: (context) => WebHomeBloc(homeBloc, coinDetailsBloc),
+        ),
       ],
       child: WebHomeScreen(selectedCoin: arguments),
     );

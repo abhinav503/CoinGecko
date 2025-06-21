@@ -1,4 +1,5 @@
 import 'package:coingecko/core/colors/app_colors.dart';
+import 'package:coingecko/core/utils/price_formatter.dart';
 import 'package:flutter/material.dart';
 
 class ProfitLossTextWidget extends StatelessWidget {
@@ -17,9 +18,9 @@ class ProfitLossTextWidget extends StatelessWidget {
     return Text(
       showSign
           ? value > 0
-              ? "+\$${value.toString()}"
-              : "-\$${value.toString().substring(1)}"
-          : "${value > 0 ? "+" : ""} ${value.toString()} %",
+              ? "+${PriceFormatter.formatPrice(value, context: context)}"
+              : PriceFormatter.formatPrice(value, context: context)
+          : "${value > 0 ? "+" : ""} ${PriceFormatter.formatPrice(value, context: context)} %",
       style:
           textStyle ??
           Theme.of(context).textTheme.bodyMedium?.copyWith(

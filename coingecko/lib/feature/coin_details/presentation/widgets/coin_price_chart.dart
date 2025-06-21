@@ -2,6 +2,7 @@ import 'package:coingecko/core/colors/app_colors.dart';
 import 'package:coingecko/core/enums/market_chart_time_filter.dart';
 import 'package:coingecko/core/ui/atoms/primary_chip.dart';
 import 'package:coingecko/feature/coin_details/domain/entities/coin_market_data_entity.dart';
+import 'package:coingecko/feature/mobile_home/domain/entities/market_coin_entity.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +11,13 @@ import 'package:intl/intl.dart';
 
 class CoinPriceChart extends StatefulWidget {
   final CoinMarketDataEntity marketData;
+  final MarketCoinEntity coin;
   final String id;
   final MarketChartTimeFilter selectedFilter;
   final double height;
   final TextStyle? tooltipTextStyle;
   final EdgeInsets? padding;
+  final bool isLoading;
   final Function(MarketChartTimeFilter, String) onFilterChanged;
 
   const CoinPriceChart({
@@ -26,6 +29,8 @@ class CoinPriceChart extends StatefulWidget {
     this.height = 220,
     this.tooltipTextStyle,
     this.padding,
+    required this.coin,
+    this.isLoading = false,
   });
 
   @override
@@ -41,9 +46,36 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
       padding: widget.padding ?? EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         children: [
-          SizedBox(
-            height: widget.height,
-            child: LineChart(_createLineChartData(context)),
+          Stack(
+            children: [
+              SizedBox(
+                height: widget.height,
+                child:
+                    widget.isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : LineChart(_createLineChartData(context)),
+              ),
+              Positioned(
+                top: 0,
+                left: 0,
+                child: Container(
+                  height: 50.h,
+                  color: AppColors.primaryColorLight,
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 5.h,
+                      ),
+                      child: Text(
+                        widget.coin.name ?? "",
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 20.h),
           _buildFilterButtons(context),
@@ -74,7 +106,17 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
         priceData.asMap().entries.map((entry) {
           return FlSpot(entry.key.toDouble(), entry.value.value ?? 0);
         }).toList();
-
+    var minY =
+        spots.isEmpty
+            ? 0
+            : spots.map((spot) => spot.y).reduce((a, b) => a < b ? a : b);
+    var maxY =
+        spots.isEmpty
+            ? 0
+            : spots.map((spot) => spot.y).reduce((a, b) => a > b ? a : b);
+    if (minY == maxY) {
+      minY = 0;
+    }
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -108,15 +150,8 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
           dotData: const FlDotData(show: false),
         ),
       ],
-      minY:
-          spots.isEmpty
-              ? 0
-              : spots.map((spot) => spot.y).reduce((a, b) => a < b ? a : b),
-      maxY:
-          spots.isEmpty
-              ? 0
-              : spots.map((spot) => spot.y).reduce((a, b) => a > b ? a : b),
-
+      minY: minY.toDouble(),
+      maxY: maxY.toDouble(),
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(
           showOnTopOfTheChartBoxArea: true,
@@ -136,7 +171,9 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
             return touchedSpots
                 .map(
                   (spot) => LineTooltipItem(
-                    getTooltipPriceText(spot.y),
+                    spot.x.toInt() < (widget.marketData.prices?.length ?? 0)
+                        ? getTooltipPriceText(spot.y)
+                        : "",
                     widget.tooltipTextStyle ??
                         const TextStyle(
                           color: AppColors.primaryTextColorLight,
@@ -144,7 +181,11 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
                         ),
                     children: [
                       TextSpan(
-                        text: getTooltipDateText(spot.x.toInt()),
+                        text:
+                            spot.x.toInt() <
+                                    (widget.marketData.prices?.length ?? 0)
+                                ? getTooltipDateText(spot.x.toInt())
+                                : "",
                         style:
                             widget.tooltipTextStyle ??
                             const TextStyle(

@@ -29,15 +29,6 @@ extension MarketChartTimeFilterExtension on MarketChartTimeFilter {
     }
   }
 
-  String? get interval {
-    switch (this) {
-      case MarketChartTimeFilter.oneYear:
-        return "daily";
-      default:
-        return null;
-    }
-  }
-
   String get titleValue {
     switch (this) {
       case MarketChartTimeFilter.oneDay:

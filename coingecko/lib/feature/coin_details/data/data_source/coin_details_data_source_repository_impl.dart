@@ -18,9 +18,17 @@ class CoinDetailsDataSourceImpl implements CoinDetailsDataSource {
   ) async {
     final response = await networkRepository.getRequest(
       urlSuffix: 'coins/${coinDetailsReqModel.id}',
-      queries: {'localization': "false", 'precision': '2'},
+      queries: {
+        'localization': "false",
+        'precision': '2',
+        'vs_currency': coinDetailsReqModel.vsCurrency ?? 'usd',
+      },
     );
-    return CoinItemModel.fromJson(jsonDecode(response.body));
+    CoinItemModel coinItemModel = CoinItemModel.fromJson({
+      ...jsonDecode(response.body),
+      'vs_currency': coinDetailsReqModel.vsCurrency ?? 'usd',
+    });
+    return coinItemModel;
   }
 
   @override

@@ -3,12 +3,13 @@ import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/enums/screen_type.dart';
 import 'package:coingecko/core/ui/atoms/primary_button.dart';
 import 'package:coingecko/core/ui/atoms/profit_loss_text_widget.dart';
-import 'package:coingecko/feature/coin_details/domain/entities/coin_item_entity.dart';
+import 'package:coingecko/core/utils/price_formatter.dart';
+import 'package:coingecko/feature/mobile_home/domain/entities/market_coin_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CoinDetailsTile extends StatelessWidget {
-  final CoinItemEntity coin;
+  final MarketCoinEntity coin;
   const CoinDetailsTile({super.key, required this.coin});
 
   @override
@@ -145,6 +146,23 @@ class SingleCoinDetailsValueTile extends StatelessWidget {
     this.showProfitLoss = false,
   });
 
+  String _formatValue(double value, BuildContext context) {
+    // Check if this is a price-related field
+    if (title == StringConstants.lastTradedPrice ||
+        title == StringConstants.change24hHigh ||
+        title == StringConstants.change24hLow) {
+      return PriceFormatter.formatPrice(value, context: context);
+    }
+
+    // For percentage values, use percentage format
+    if (title == StringConstants.change24h) {
+      return PriceFormatter.formatPercentage(value);
+    }
+
+    // Default formatting
+    return PriceFormatter.formatNumber(value);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -166,7 +184,7 @@ class SingleCoinDetailsValueTile extends StatelessWidget {
           ),
         if (!showProfitLoss)
           Text(
-            value.toString(),
+            _formatValue(value, context),
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
               color: WebAppbarColors.headerTextColor,
             ),

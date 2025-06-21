@@ -1,22 +1,25 @@
 import 'package:coingecko/core/base/base_screen.dart';
 import 'package:coingecko/core/colors/app_colors.dart';
+import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/enums/market_chart_time_filter.dart';
 import 'package:coingecko/core/enums/screen_type.dart';
 import 'package:coingecko/core/ui/atoms/primary_button.dart';
 import 'package:coingecko/core/ui/atoms/profit_loss_text_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_tabbar.dart';
+import 'package:coingecko/core/utils/price_formatter.dart';
 import 'package:coingecko/feature/coin_details/presentation/bloc/coin_details_bloc.dart';
 import 'package:coingecko/feature/coin_details/presentation/widgets/coin_overview.dart';
 import 'package:coingecko/feature/coin_details/presentation/widgets/coin_price_chart.dart';
+import 'package:coingecko/feature/mobile_home/domain/entities/market_coin_entity.dart';
 import 'package:coingecko/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CoinDetailsScreen extends BaseScreen {
-  final String id;
-  const CoinDetailsScreen({super.key, required this.id});
+  final MarketCoinEntity coin;
+  const CoinDetailsScreen({super.key, required this.coin});
 
   @override
   State<CoinDetailsScreen> createState() => _CoinDetailsScreenState();
@@ -26,13 +29,29 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
     with TickerProviderStateMixin {
   CoinDetailsBloc get getBloc => context.read<CoinDetailsBloc>();
   late TabController tabController;
+  bool isInit = true;
 
   @override
   void initState() {
     tabController = TabController(length: 2, vsync: this);
-    getBloc.add(GetCoinDetailsEvent(id: widget.id));
-    getBloc.add(GetCoinMarketDataEvent(id: widget.id));
+    getBloc.coinItemEntity = widget.coin;
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (isInit) {
+      getBloc.add(
+        GetCoinMarketDataEvent(
+          id: widget.coin.id ?? "",
+          vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+            Localizations.localeOf(context),
+          ),
+        ),
+      );
+      isInit = false;
+    }
   }
 
   @override
@@ -43,12 +62,12 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
         screenType = screenType.getDeviceType(context);
         if ([ScreenType.desktop, ScreenType.tablet].contains(screenType)) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.webHome,
-              arguments: widget.id,
-              (route) => false,
-            );
+            // Navigator.pushNamedAndRemoveUntil(
+            //   context,
+            //   Routes.webHome,
+            //   arguments: widget.id,
+            //   (route) => false,
+            // );
           });
         }
         return BlocConsumer<CoinDetailsBloc, CoinDetailsState>(
@@ -69,17 +88,21 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
                     children: [
                       SizedBox(height: 30.h),
                       Text(
-                        "\$${getBloc.coinItemEntity?.currentPrice.toString() ?? ""}",
+                        PriceFormatter.formatPrice(
+                          getBloc.coinItemEntity?.currentPrice,
+                          context: context,
+                        ),
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       SizedBox(height: 5.h),
                       getPriceChangePercentageWidget(),
                       SizedBox(height: 40.h),
                       CoinPriceChart(
-                        id: widget.id,
+                        id: widget.coin.id ?? "",
                         marketData: getBloc.coinMarketDataEntity!,
                         selectedFilter: getBloc.currentFilter,
                         onFilterChanged: getBloc.onTimeFilterChanged,
+                        coin: widget.coin,
                       ),
                       SizedBox(height: 20.h),
                       CustomTabbar(
@@ -146,17 +169,17 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
       case MarketChartTimeFilter.oneWeek:
         priceChange24h = getBloc.coinItemEntity!.priceChange24h!;
         priceChangePercentage24h =
-            getBloc.coinItemEntity!.priceChangePercentage7d!;
+            getBloc.coinItemEntity!.priceChangePercentage7d ?? 0.0;
         break;
       case MarketChartTimeFilter.oneMonth:
         priceChange24h = getBloc.coinItemEntity!.priceChange24h!;
         priceChangePercentage24h =
-            getBloc.coinItemEntity!.priceChangePercentage30d!;
+            getBloc.coinItemEntity!.priceChangePercentage30d ?? 0.0;
         break;
       case MarketChartTimeFilter.oneYear:
         priceChange24h = getBloc.coinItemEntity!.priceChange24h!;
         priceChangePercentage24h =
-            getBloc.coinItemEntity!.priceChangePercentage1y!;
+            getBloc.coinItemEntity!.priceChangePercentage1y ?? 0.0;
         break;
     }
     return SizedBox(
@@ -164,7 +187,15 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ProfitLossTextWidget(value: priceChange24h!, showSign: true),
+          ProfitLossTextWidget(
+            value: double.parse(
+              PriceFormatter.formatNumber(
+                priceChange24h,
+                context: context,
+              ).replaceAll(",", ""),
+            ),
+            showSign: true,
+          ),
           VerticalDivider(color: Colors.grey, indent: 10.h, endIndent: 10.h),
           ProfitLossTextWidget(
             value: priceChangePercentage24h,

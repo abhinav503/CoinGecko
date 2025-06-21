@@ -5,18 +5,21 @@ class CoinDetailsReqModel
     extends Mapper<CoinDetailsReqEntity, CoinDetailsReqModel> {
   String? id;
   String? localization;
+  String? vsCurrency;
 
-  CoinDetailsReqModel({this.id, this.localization});
+  CoinDetailsReqModel({this.id, this.localization, this.vsCurrency});
 
   CoinDetailsReqModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     localization = json['localization'];
+    vsCurrency = json['vs_currency'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['localization'] = localization;
+    data['vs_currency'] = vsCurrency;
     return data;
   }
 
@@ -25,6 +28,7 @@ class CoinDetailsReqModel
     return CoinDetailsReqModel(
       id: object.id,
       localization: object.localization,
+      vsCurrency: object.vsCurrency,
     );
   }
 }

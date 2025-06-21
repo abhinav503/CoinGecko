@@ -1,6 +1,7 @@
 import 'package:coingecko/core/colors/app_colors.dart';
 import 'package:coingecko/core/ui/molecules/custom_network_image.dart';
-import 'package:coingecko/feature/home/domain/entities/market_coin_entity.dart';
+import 'package:coingecko/core/utils/price_formatter.dart';
+import 'package:coingecko/feature/mobile_home/domain/entities/market_coin_entity.dart';
 import 'package:flutter/material.dart';
 
 class CoinItemWidget extends StatelessWidget {
@@ -42,7 +43,7 @@ class CoinItemWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            "${coin.priceChangePercentage24h! > 0 ? "+" : ""}${coin.priceChangePercentage24h}%",
+            PriceFormatter.formatPercentage(coin.priceChangePercentage24h),
             style: TextStyle(
               color:
                   coin.priceChangePercentage24h! > 0
@@ -52,7 +53,7 @@ class CoinItemWidget extends StatelessWidget {
             ),
           ),
           Text(
-            "\$${coin.currentPrice}",
+            PriceFormatter.formatPrice(coin.currentPrice, context: context),
             style: const TextStyle(
               fontSize: 12,
               color: AppColors.primaryTextColor,

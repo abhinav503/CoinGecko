@@ -1,11 +1,12 @@
+import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/ui/atoms/pagination_controller.dart';
 import 'package:coingecko/core/ui/molecules/coin_item_widget.dart';
 import 'package:coingecko/core/ui/molecules/coin_selected_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_web_tabbar.dart';
 import 'package:coingecko/feature/coin_details/presentation/bloc/coin_details_bloc.dart';
-import 'package:coingecko/feature/home/domain/entities/market_coin_entity.dart';
-import 'package:coingecko/feature/home/presentation/bloc/home_bloc.dart';
+import 'package:coingecko/feature/mobile_home/domain/entities/market_coin_entity.dart';
+import 'package:coingecko/feature/mobile_home/presentation/bloc/home_bloc.dart';
 import 'package:coingecko/feature/web_home/presentation/bloc/web_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,12 +15,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class WebCoinListview extends StatefulWidget {
   final List<MarketCoinEntity> coins;
   final TabController tabController;
-  final PaginationScrollController paginationController;
+  final PaginationScrollController? paginationController;
   const WebCoinListview({
     super.key,
     required this.coins,
     required this.tabController,
-    required this.paginationController,
+    this.paginationController,
   });
 
   @override
@@ -43,16 +44,16 @@ class _WebCoinListviewState extends State<WebCoinListview> {
     return BlocConsumer<WebHomeBloc, WebHomeState>(
       listener: (context, state) {
         if (state is SelectedCoinState) {
-          coinDetailsBloc.add(
-            GetCoinDetailsEvent(
-              id: widget.coins[webHomeBloc.selectedIndex].id ?? "",
-            ),
-          );
-          coinDetailsBloc.add(
-            GetCoinMarketDataEvent(
-              id: widget.coins[webHomeBloc.selectedIndex].id ?? "",
-            ),
-          );
+          if (state.runApis) {
+            coinDetailsBloc.add(
+              GetCoinMarketDataEvent(
+                id: widget.coins[webHomeBloc.selectedIndex].id ?? "",
+                vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
+                  Localizations.localeOf(context),
+                ),
+              ),
+            );
+          }
         }
       },
       builder: (context, state) {
@@ -68,8 +69,19 @@ class _WebCoinListviewState extends State<WebCoinListview> {
               ),
               CustomWebTabbar(
                 height: 64.h,
-                tabs: const [StringConstants.all, StringConstants.totalVolume],
-                onTap: homeBloc.onTapMarketCoinsTab,
+                icons:
+                    homeBloc.tabbarData
+                        .map<IconData>((e) => e["icon"])
+                        .toList(),
+                tabs: const [
+                  StringConstants.marketCapDesc,
+                  StringConstants.currentPrice,
+                  StringConstants.aZ,
+                ],
+                onTap: (index) {
+                  homeBloc.add(UpdateMarketCoinsOrderEvent(index: index));
+                  webHomeBloc.add(SelectCoinEvent(index: 0, runApis: true));
+                },
                 textStyle: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -83,14 +95,19 @@ class _WebCoinListviewState extends State<WebCoinListview> {
                   padding: const EdgeInsets.all(0),
                   shrinkWrap: true,
                   itemCount: widget.coins.length,
-                  controller: widget.paginationController.scrollController,
                   itemBuilder: (context, index) {
                     return CoinItemWidget(
                       showLeading: false,
                       isSelected: webHomeBloc.selectedIndex == index,
                       coin: widget.coins[index],
                       onTap: () {
-                        webHomeBloc.add(SelectCoinEvent(index: index));
+                        bool runApis = true;
+                        if (webHomeBloc.selectedIndex == index) {
+                          runApis = false;
+                        }
+                        webHomeBloc.add(
+                          SelectCoinEvent(index: index, runApis: runApis),
+                        );
                       },
                     );
                   },
