@@ -46,7 +46,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeInitialEvent>((event, emitState) {});
 
     on<FetchMarketCoinsEvent>((event, emitState) async {
-      currentCurrency = event.vsCurrency;
       if (marketCoins.isNotEmpty && !event.fromTimer) {
         emitState(FetchMarketCoinsState());
         return;
@@ -54,7 +53,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       print("FetchMarketCoinsEvent =========>");
       final response = await getMarketCoinsUsecase(
         GetMarketCoinsReqEntity(
-          vsCurrency: event.vsCurrency,
+          vsCurrency: event.fromTimer ? currentCurrency : event.vsCurrency,
           perPage: limit,
           page: page,
           order: currentOrder,
@@ -66,7 +65,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emitState(FetchMarketCoinsErrorState(message: failure.message));
         },
         (data) {
-          marketCoins = data;
+          if (event.fromTimer) {
+            currentCurrency = event.vsCurrency;
+            // Update existing coins efficiently
+            final newDataMap = {for (var coin in data) coin.id: coin};
+            for (int i = 0; i < marketCoins.length; i++) {
+              final newCoin = newDataMap[marketCoins[i].id];
+              if (newCoin != null) {
+                marketCoins[i].currentPrice = newCoin.currentPrice;
+                marketCoins[i].priceChangePercentage24h =
+                    newCoin.priceChangePercentage24h;
+              }
+            }
+          } else {
+            marketCoins = data;
+          }
           emitState(FetchMarketCoinsState());
         },
       );
