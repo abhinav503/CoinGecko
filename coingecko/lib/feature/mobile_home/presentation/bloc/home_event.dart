@@ -7,7 +7,12 @@ class HomeInitialEvent extends HomeEvent {}
 class FetchMarketCoinsEvent extends HomeEvent {
   final String order;
   final String vsCurrency;
-  FetchMarketCoinsEvent({required this.order, required this.vsCurrency});
+  final bool fromTimer;
+  FetchMarketCoinsEvent({
+    required this.order,
+    required this.vsCurrency,
+    this.fromTimer = false,
+  });
 }
 
 class UpdateMarketCoinsOrderEvent extends HomeEvent {

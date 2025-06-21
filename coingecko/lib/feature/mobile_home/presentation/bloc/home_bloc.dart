@@ -13,6 +13,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetMarketCoinsUsecase getMarketCoinsUsecase;
 
   bool isLoading = false;
+  Timer? timer;
   int limit = 100;
   int page = 1;
   Timer? debounce;
@@ -38,12 +39,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   List<MarketCoinEntity> marketCoins = [];
   String currentOrder = 'market_cap_desc';
+  String currentCurrency = 'usd';
   int currentTabIndex = 0;
   HomeBloc({required this.getMarketCoinsUsecase}) : super(HomeInitialState()) {
     on<HomeInitialEvent>((event, emitState) {});
 
     on<FetchMarketCoinsEvent>((event, emitState) async {
-      if (marketCoins.isNotEmpty) {
+      currentCurrency = event.vsCurrency;
+      if (marketCoins.isNotEmpty && !event.fromTimer) {
         emitState(FetchMarketCoinsState());
         return;
       }
@@ -62,7 +65,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emitState(FetchMarketCoinsErrorState(message: failure.message));
         },
         (data) {
-          marketCoins.addAll(data);
+          marketCoins = data;
           emitState(FetchMarketCoinsState());
         },
       );
@@ -139,6 +142,27 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         marketCoins.sort((a, b) => b.name!.compareTo(a.name!));
         break;
     }
+  }
+
+  void startTimer() {
+    print("startTimer =========>");
+    timer?.cancel();
+
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      print("timer running =========>");
+      add(
+        FetchMarketCoinsEvent(
+          order: currentOrder,
+          vsCurrency: currentCurrency,
+          fromTimer: true,
+        ),
+      );
+    });
+  }
+
+  stopTimer() {
+    print("stopTimer =========>");
+    timer?.cancel();
   }
 
   @override

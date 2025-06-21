@@ -43,7 +43,7 @@ class CoinItemWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            "${coin.priceChangePercentage24h! > 0 ? "+" : ""}${coin.priceChangePercentage24h}%",
+            PriceFormatter.formatPercentage(coin.priceChangePercentage24h),
             style: TextStyle(
               color:
                   coin.priceChangePercentage24h! > 0

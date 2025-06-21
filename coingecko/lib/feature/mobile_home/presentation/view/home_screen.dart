@@ -36,12 +36,14 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
       vsync: this,
       initialIndex: homeBloc.currentTabIndex,
     );
+
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
     if (isInit) {
+      homeBloc.startTimer();
       homeBloc.add(
         FetchMarketCoinsEvent(
           order: homeBloc.currentOrder,
@@ -169,9 +171,18 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                       child: TabBarView(
                         controller: homeBloc.tabController,
                         children: [
-                          CoinsListview(coins: homeBloc.marketCoins),
-                          CoinsListview(coins: homeBloc.marketCoins),
-                          CoinsListview(coins: homeBloc.marketCoins),
+                          CoinsListview(
+                            coins: homeBloc.marketCoins,
+                            homeBloc: homeBloc,
+                          ),
+                          CoinsListview(
+                            coins: homeBloc.marketCoins,
+                            homeBloc: homeBloc,
+                          ),
+                          CoinsListview(
+                            coins: homeBloc.marketCoins,
+                            homeBloc: homeBloc,
+                          ),
                         ],
                       ),
                     ),
