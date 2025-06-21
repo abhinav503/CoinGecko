@@ -6,6 +6,7 @@ import 'package:coingecko/core/ui/atoms/custom_icon_widget.dart';
 import 'package:coingecko/core/ui/atoms/primary_button.dart';
 import 'package:coingecko/core/ui/molecules/campaign_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_tabbar.dart';
+import 'package:coingecko/core/utils/price_formatter.dart';
 import 'package:coingecko/feature/mobile_home/presentation/widgets/coins_listview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -48,9 +49,9 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Column(
+                Column(
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         Text(
                           StringConstants.totalBalance,
@@ -65,8 +66,8 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                       ],
                     ),
                     Text(
-                      "\$107,39.12",
-                      style: TextStyle(
+                      PriceFormatter.formatPrice(10739.12, context: context),
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w500,
                       ),

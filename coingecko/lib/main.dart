@@ -1,7 +1,9 @@
+import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:coingecko/core/di/injection_container.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main(List<String> args) async {
@@ -21,6 +23,12 @@ class MainApp extends StatelessWidget {
       minTextAdapt: true,
       builder:
           (context, child) => MaterialApp(
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: CurrencyConstants.getSupportedLocales(),
             onGenerateRoute:
                 kIsWeb ? Routes.generateRouteWeb : Routes.generateRouteMobile,
             theme: ThemeData(textTheme: textTheme()),

@@ -6,6 +6,7 @@ import 'package:coingecko/core/enums/screen_type.dart';
 import 'package:coingecko/core/ui/atoms/primary_button.dart';
 import 'package:coingecko/core/ui/atoms/profit_loss_text_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_tabbar.dart';
+import 'package:coingecko/core/utils/price_formatter.dart';
 import 'package:coingecko/feature/coin_details/presentation/bloc/coin_details_bloc.dart';
 import 'package:coingecko/feature/coin_details/presentation/widgets/coin_overview.dart';
 import 'package:coingecko/feature/coin_details/presentation/widgets/coin_price_chart.dart';
@@ -69,7 +70,9 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
                     children: [
                       SizedBox(height: 30.h),
                       Text(
-                        "\$${getBloc.coinItemEntity?.currentPrice.toString() ?? ""}",
+                        PriceFormatter.formatPrice(
+                          getBloc.coinItemEntity?.currentPrice,
+                        ),
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       SizedBox(height: 5.h),
@@ -164,7 +167,12 @@ class _CoinDetailsScreenState extends BaseScreenState<CoinDetailsScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ProfitLossTextWidget(value: priceChange24h!, showSign: true),
+          ProfitLossTextWidget(
+            value: double.parse(
+              PriceFormatter.formatNumber(priceChange24h).replaceAll(",", ""),
+            ),
+            showSign: true,
+          ),
           VerticalDivider(color: Colors.grey, indent: 10.h, endIndent: 10.h),
           ProfitLossTextWidget(
             value: priceChangePercentage24h,
