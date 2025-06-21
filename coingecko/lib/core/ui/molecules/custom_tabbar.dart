@@ -20,6 +20,7 @@ class CustomTabbar extends StatefulWidget {
   final bool isScrollable;
   final TabAlignment tabAlignment;
   final bool showIndicator;
+  final List<IconData> icons;
   const CustomTabbar({
     super.key,
     required this.tabs,
@@ -37,6 +38,7 @@ class CustomTabbar extends StatefulWidget {
     this.indicatorPadding,
     this.onTap,
     this.showIndicator = true,
+    this.icons = const [],
   });
 
   @override
@@ -44,26 +46,11 @@ class CustomTabbar extends StatefulWidget {
 }
 
 class _CustomTabbarState extends State<CustomTabbar> {
-  List<IconData> icons = [];
   @override
   void initState() {
     super.initState();
-    icons = [
-      HugeIcons.strokeRoundedArrowDown02,
-      HugeIcons.strokeRoundedArrowDown02,
-    ];
     widget.tabController.addListener(() {
       widget.onTabChanged(widget.tabController.index);
-    });
-  }
-
-  rotateIcon(index) {
-    setState(() {
-      if (icons[index] == HugeIcons.strokeRoundedArrowDown02) {
-        icons[index] = HugeIcons.strokeRoundedArrowUp02;
-      } else {
-        icons[index] = HugeIcons.strokeRoundedArrowDown02;
-      }
     });
   }
 
@@ -76,7 +63,6 @@ class _CustomTabbarState extends State<CustomTabbar> {
         controller: widget.tabController,
         onTap: (index) {
           widget.onTap?.call(index);
-          rotateIcon(index);
         },
         tabs:
             widget.tabs
@@ -89,13 +75,13 @@ class _CustomTabbarState extends State<CustomTabbar> {
                         tab,
                         style:
                             widget.textStyle ??
-                            Theme.of(context).textTheme.titleSmall,
+                            Theme.of(context).textTheme.bodySmall,
                       ),
                       if (widget.showIndicator)
                         CustomIconWidget(
-                          icon: icons[index],
+                          icon: widget.icons[index],
                           color: widget.selectedColor ?? AppColors.primaryColor,
-                          size: 16,
+                          size: 20,
                         ),
                     ],
                   ),

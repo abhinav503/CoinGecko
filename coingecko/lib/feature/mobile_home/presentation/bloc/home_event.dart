@@ -10,4 +10,7 @@ class FetchMarketCoinsEvent extends HomeEvent {
   FetchMarketCoinsEvent({required this.order, this.reset = false});
 }
 
-class UpdateMarketCoinsOrderEvent extends HomeEvent {}
+class UpdateMarketCoinsOrderEvent extends HomeEvent {
+  final int index;
+  UpdateMarketCoinsOrderEvent({required this.index});
+}

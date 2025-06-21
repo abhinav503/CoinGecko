@@ -28,12 +28,11 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
   @override
   void initState() {
     getBloc.tabController = TabController(
-      length: 2,
+      length: 3,
       vsync: this,
       initialIndex: getBloc.currentTabIndex,
     );
     getBloc.add(FetchMarketCoinsEvent(order: getBloc.currentOrder));
-    getBloc.paginationScrollController.init(loadAction: getBloc.onNextPageCall);
     super.initState();
   }
 
@@ -98,9 +97,6 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
           Flexible(
             child: BlocConsumer<HomeBloc, HomeState>(
               listener: (context, state) {
-                if (state is FetchMarketCoinsState) {
-                  getBloc.paginationScrollController.isLoading = false;
-                }
                 if (state is FetchMarketCoinsErrorState) {
                   showToast(state.message);
                 }
@@ -111,29 +107,23 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                 }
                 return Column(
                   children: [
-                    // Row(
-                    //   children: [
-                    //     SizedBox(width: 12.w),
-                    //     Text(
-                    //       StringConstants.watchlist,
-                    //       style: Theme.of(context).textTheme.bodyMedium,
-                    //     ),
-                    //     const SizedBox(width: 30),
-                    //     Text(
-                    //       StringConstants.coin,
-                    //       style: Theme.of(context).textTheme.bodyMedium,
-                    //     ),
-                    //   ],
-                    // ),
-                    // const SizedBox(height: 10),
                     SizedBox(
                       height: kIsWeb ? 45.h : 35.h,
                       child: CustomTabbar(
-                        onTap: getBloc.onTapMarketCoinsTab,
+                        icons:
+                            getBloc.tabbarData
+                                .map<IconData>((e) => e["icon"])
+                                .toList(),
+                        onTap: (index) {
+                          getBloc.add(
+                            UpdateMarketCoinsOrderEvent(index: index),
+                          );
+                        },
                         tabController: getBloc.tabController!,
                         tabs: const [
-                          StringConstants.all,
-                          StringConstants.totalVolume,
+                          StringConstants.marketCapDesc,
+                          StringConstants.currentPrice,
+                          StringConstants.aZ,
                         ],
                         onTabChanged: (index) {},
                         indicator: BoxDecoration(
@@ -160,6 +150,7 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                       child: TabBarView(
                         controller: getBloc.tabController,
                         children: [
+                          CoinsListview(coins: getBloc.marketCoins),
                           CoinsListview(coins: getBloc.marketCoins),
                           CoinsListview(coins: getBloc.marketCoins),
                         ],

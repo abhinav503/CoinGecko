@@ -14,12 +14,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class WebCoinListview extends StatefulWidget {
   final List<MarketCoinEntity> coins;
   final TabController tabController;
-  final PaginationScrollController paginationController;
+  final PaginationScrollController? paginationController;
   const WebCoinListview({
     super.key,
     required this.coins,
     required this.tabController,
-    required this.paginationController,
+    this.paginationController,
   });
 
   @override
@@ -69,7 +69,9 @@ class _WebCoinListviewState extends State<WebCoinListview> {
               CustomWebTabbar(
                 height: 64.h,
                 tabs: const [StringConstants.all, StringConstants.totalVolume],
-                onTap: homeBloc.onTapMarketCoinsTab,
+                onTap: (index) {
+                  homeBloc.add(UpdateMarketCoinsOrderEvent(index: index));
+                },
                 textStyle: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -83,7 +85,6 @@ class _WebCoinListviewState extends State<WebCoinListview> {
                   padding: const EdgeInsets.all(0),
                   shrinkWrap: true,
                   itemCount: widget.coins.length,
-                  controller: widget.paginationController.scrollController,
                   itemBuilder: (context, index) {
                     return CoinItemWidget(
                       showLeading: false,
