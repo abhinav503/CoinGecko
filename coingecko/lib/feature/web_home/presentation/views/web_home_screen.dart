@@ -265,6 +265,19 @@ class WebCoinChart extends StatelessWidget {
             child: const Center(child: CircularProgressIndicator()),
           );
         }
+        if (coinDetailsBloc.coinMarketDataEntity!.prices!.isEmpty) {
+          return SizedBox(
+            height: MediaQuery.of(context).size.height - 340.h,
+            width:
+                [
+                      ScreenType.mobileSmall,
+                      ScreenType.mobileLarge,
+                    ].contains(screenType)
+                    ? MediaQuery.of(context).size.width - 400.w
+                    : MediaQuery.of(context).size.width - 800.w,
+            child: const Center(child: Text("No data available")),
+          );
+        }
         if (coinDetailsBloc.coinMarketDataEntity == null ||
             coinDetailsBloc.coinItemEntity == null) {
           return const SizedBox.shrink();

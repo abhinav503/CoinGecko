@@ -3,6 +3,7 @@ import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/feature/mobile_home/domain/entities/get_market_coins_req_entity.dart';
 import 'package:coingecko/feature/mobile_home/domain/entities/market_coin_entity.dart';
 import 'package:coingecko/feature/mobile_home/domain/usecase/get_market_coins_usecase.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -145,11 +146,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void startTimer() {
-    print("startTimer =========>");
+    if (kIsWeb) {
+      return;
+    }
     timer?.cancel();
 
     timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      print("timer running =========>");
       add(
         FetchMarketCoinsEvent(
           order: currentOrder,
@@ -161,7 +163,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   stopTimer() {
-    print("stopTimer =========>");
+    if (kIsWeb) {
+      return;
+    }
     timer?.cancel();
   }
 

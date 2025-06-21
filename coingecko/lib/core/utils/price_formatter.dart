@@ -12,7 +12,7 @@ class PriceFormatter {
     final formatter = NumberFormat.currency(
       locale: locale,
       symbol: currencySymbol,
-      decimalDigits: 6,
+      decimalDigits: 3,
     );
 
     return formatter.format(price).replaceAll(".00", "");

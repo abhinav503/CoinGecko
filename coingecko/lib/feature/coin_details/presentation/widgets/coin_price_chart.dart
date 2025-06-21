@@ -106,7 +106,17 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
         priceData.asMap().entries.map((entry) {
           return FlSpot(entry.key.toDouble(), entry.value.value ?? 0);
         }).toList();
-
+    var minY =
+        spots.isEmpty
+            ? 0
+            : spots.map((spot) => spot.y).reduce((a, b) => a < b ? a : b);
+    var maxY =
+        spots.isEmpty
+            ? 0
+            : spots.map((spot) => spot.y).reduce((a, b) => a > b ? a : b);
+    if (minY == maxY) {
+      minY = 0;
+    }
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -140,15 +150,8 @@ class _CoinPriceChartState extends State<CoinPriceChart> {
           dotData: const FlDotData(show: false),
         ),
       ],
-      minY:
-          spots.isEmpty
-              ? 0
-              : spots.map((spot) => spot.y).reduce((a, b) => a < b ? a : b),
-      maxY:
-          spots.isEmpty
-              ? 0
-              : spots.map((spot) => spot.y).reduce((a, b) => a > b ? a : b),
-
+      minY: minY.toDouble(),
+      maxY: maxY.toDouble(),
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(
           showOnTopOfTheChartBoxArea: true,

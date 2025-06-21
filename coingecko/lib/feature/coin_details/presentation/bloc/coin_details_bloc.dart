@@ -101,14 +101,23 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
     MarketChartTimeFilter filter,
   ) {
     if (filter == MarketChartTimeFilter.oneMonth) {
+      if (fullData.prices!.length < 30) {
+        return fullData;
+      }
       return CoinMarketDataEntity(
         prices: fullData.prices!.skip(fullData.prices!.length - 30).toList(),
       );
     } else if (filter == MarketChartTimeFilter.oneWeek) {
+      if (fullData.prices!.length < 7) {
+        return fullData;
+      }
       return CoinMarketDataEntity(
         prices: fullData.prices!.skip(fullData.prices!.length - 7).toList(),
       );
     } else if (filter == MarketChartTimeFilter.oneDay) {
+      if (fullData.prices!.length < 2) {
+        return fullData;
+      }
       return CoinMarketDataEntity(
         prices: fullData.prices!.skip(fullData.prices!.length - 2).toList(),
       );
