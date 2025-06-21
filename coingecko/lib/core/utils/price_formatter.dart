@@ -12,10 +12,10 @@ class PriceFormatter {
     final formatter = NumberFormat.currency(
       locale: locale,
       symbol: currencySymbol,
-      decimalDigits: price < 1 ? 4 : 2,
+      decimalDigits: 2,
     );
 
-    return formatter.format(price);
+    return formatter.format(price).replaceAll(".00", "");
   }
 
   static String formatPercentage(double? percentage, {BuildContext? context}) {
