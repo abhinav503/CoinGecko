@@ -14,10 +14,12 @@ part 'coin_details_state.dart';
 class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
   final GetCoinDetailsUsecase getCoinDetailsUsecase;
   final GetCoinMarketDataUsecase getCoinMarketDataUsecase;
+
   CoinItemEntity? coinItemEntity;
   CoinMarketDataEntity? coinMarketDataEntity;
+  CoinMarketDataEntity? fullCoinMarketDataEntity;
 
-  MarketChartTimeFilter currentFilter = MarketChartTimeFilter.oneDay;
+  MarketChartTimeFilter currentFilter = MarketChartTimeFilter.oneYear;
   CoinDetailsBloc({
     required this.getCoinDetailsUsecase,
     required this.getCoinMarketDataUsecase,
@@ -29,7 +31,6 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
 
   void onTimeFilterChanged(MarketChartTimeFilter filter, String id) {
     add(UpdateTimeFilterEvent(filter: filter));
-    add(GetCoinMarketDataEvent(id: id));
   }
 
   void _onUpdateTimeFilter(
@@ -37,7 +38,11 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
     Emitter<CoinDetailsState> emit,
   ) {
     currentFilter = event.filter;
-    emit(CoinDetailsInitial());
+    coinMarketDataEntity = _extractTimePeriodData(
+      fullCoinMarketDataEntity!,
+      currentFilter,
+    );
+    emit(CoinMarketDataApiCallState());
   }
 
   void _onGetCoinDetails(
@@ -45,7 +50,7 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
     Emitter<CoinDetailsState> emit,
   ) async {
     final result = await getCoinDetailsUsecase(
-      CoinDetailsReqEntity(id: event.id),
+      CoinDetailsReqEntity(id: event.id, vsCurrency: event.vsCurrency),
     );
     result.fold(
       (failure) {
@@ -65,9 +70,9 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
     final result = await getCoinMarketDataUsecase(
       GetCoinMarketDataReqEntity(
         id: event.id,
-        vsCurrency: "usd",
+        vsCurrency: event.vsCurrency,
         days: currentFilter.days.toString(),
-        interval: currentFilter.interval,
+        interval: "daily",
       ),
     );
     result.fold(
@@ -75,9 +80,30 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
         emit(CoinDetailsApiErrorState(message: failure.message));
       },
       (data) {
-        coinMarketDataEntity = data;
+        fullCoinMarketDataEntity = data;
+        currentFilter = MarketChartTimeFilter.oneDay;
+        coinMarketDataEntity = _extractTimePeriodData(
+          fullCoinMarketDataEntity!,
+          currentFilter,
+        );
         emit(CoinMarketDataApiCallState());
       },
     );
+  }
+
+  /// Extracts data for a specific time period from the full year data
+  CoinMarketDataEntity _extractTimePeriodData(
+    CoinMarketDataEntity fullData,
+    MarketChartTimeFilter filter,
+  ) {
+    if (filter == MarketChartTimeFilter.oneMonth) {
+      return CoinMarketDataEntity(prices: fullData.prices!.sublist(0, 30));
+    } else if (filter == MarketChartTimeFilter.oneWeek) {
+      return CoinMarketDataEntity(prices: fullData.prices!.sublist(0, 7));
+    } else if (filter == MarketChartTimeFilter.oneDay) {
+      return CoinMarketDataEntity(prices: fullData.prices!.sublist(0, 2));
+    } else {
+      return fullData;
+    }
   }
 }
