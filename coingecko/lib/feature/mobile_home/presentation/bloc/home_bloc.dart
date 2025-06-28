@@ -12,7 +12,6 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetMarketCoinsUsecase getMarketCoinsUsecase;
-
   bool isLoading = false;
   Timer? timer;
   int limit = 100;
@@ -39,6 +38,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   TextEditingController searchController = TextEditingController();
 
   List<MarketCoinEntity> marketCoins = [];
+  List<MarketCoinEntity> filteredMarketCoins = [];
   String currentOrder = 'market_cap_desc';
   String currentCurrency = 'usd';
   int currentTabIndex = 0;
@@ -79,6 +79,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
           } else {
             marketCoins = data;
+            filteredMarketCoins = [...marketCoins];
           }
           emitState(FetchMarketCoinsState());
         },
@@ -91,6 +92,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       _sortMarketCoins();
       currentTabIndex = index;
       emitState(UpdateMarketCoinsOrderState());
+    });
+
+    on<SearchMarketCoinsEvent>((event, emitState) {
+      filteredMarketCoins = _searchMarketCoins();
+      emitState(SearchMarketCoinsState());
     });
   }
 
@@ -133,9 +139,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         marketCoins.sort(
           (a, b) => (b.marketCap ?? 0).compareTo(a.marketCap ?? 0),
         );
+        filteredMarketCoins.sort(
+          (a, b) => (b.marketCap ?? 0).compareTo(a.marketCap ?? 0),
+        );
         break;
       case "market_cap_asc":
         marketCoins.sort(
+          (a, b) => (a.marketCap ?? 0).compareTo(b.marketCap ?? 0),
+        );
+        filteredMarketCoins.sort(
           (a, b) => (a.marketCap ?? 0).compareTo(b.marketCap ?? 0),
         );
         break;
@@ -143,17 +155,33 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         marketCoins.sort(
           (a, b) => (b.currentPrice ?? 0).compareTo(a.currentPrice ?? 0),
         );
+        filteredMarketCoins.sort(
+          (a, b) => (b.currentPrice ?? 0).compareTo(a.currentPrice ?? 0),
+        );
         break;
       case "current_price_asc":
         marketCoins.sort(
           (a, b) => (a.currentPrice ?? 0).compareTo(b.currentPrice ?? 0),
         );
+        filteredMarketCoins.sort(
+          (a, b) => (a.currentPrice ?? 0).compareTo(b.currentPrice ?? 0),
+        );
         break;
       case "a_z":
-        marketCoins.sort((a, b) => a.name!.compareTo(b.name!));
+        marketCoins.sort(
+          (a, b) => a.name!.toLowerCase().compareTo(b.name!.toLowerCase()),
+        );
+        filteredMarketCoins.sort(
+          (a, b) => a.name!.toLowerCase().compareTo(b.name!.toLowerCase()),
+        );
         break;
       case "z_a":
-        marketCoins.sort((a, b) => b.name!.compareTo(a.name!));
+        marketCoins.sort(
+          (a, b) => b.name!.toLowerCase().compareTo(a.name!.toLowerCase()),
+        );
+        filteredMarketCoins.sort(
+          (a, b) => b.name!.toLowerCase().compareTo(a.name!.toLowerCase()),
+        );
         break;
     }
   }
@@ -180,6 +208,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       return;
     }
     timer?.cancel();
+  }
+
+  List<MarketCoinEntity> _searchMarketCoins() {
+    stopTimer();
+    String searchText = searchController.text.trim();
+    if (searchText.isEmpty) {
+      startTimer();
+      return marketCoins;
+    }
+    filteredMarketCoins =
+        marketCoins
+            .where(
+              (coin) =>
+                  (coin.name?.toLowerCase().contains(
+                        searchText.toLowerCase(),
+                      ) ??
+                      false) ||
+                  (coin.symbol?.toLowerCase().contains(
+                        searchText.toLowerCase(),
+                      ) ??
+                      false),
+            )
+            .toList();
+    startTimer();
+    return filteredMarketCoins;
   }
 
   @override

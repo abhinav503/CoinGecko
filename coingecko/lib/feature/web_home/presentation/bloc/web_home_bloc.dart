@@ -13,9 +13,14 @@ class WebHomeBloc extends Bloc<WebHomeEvent, WebHomeState> {
     on<WebHomeEvent>((event, emit) {});
     on<SelectCoinEvent>((event, emit) {
       selectedIndex = event.index;
-      coinDetailsBloc.add(
-        ChangeCoinDetailsEvent(coin: homeBloc.marketCoins[selectedIndex]),
-      );
+      if (homeBloc.filteredMarketCoins.isNotEmpty) {
+        coinDetailsBloc.add(
+          ChangeCoinDetailsEvent(
+            coin: homeBloc.filteredMarketCoins[selectedIndex],
+          ),
+        );
+      }
+
       emit(SelectedCoinState(runApis: event.runApis));
     });
   }

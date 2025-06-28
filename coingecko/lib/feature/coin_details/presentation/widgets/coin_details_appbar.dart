@@ -1,3 +1,4 @@
+import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/core/ui/molecules/coin_selected_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_appbar.dart';
 import 'package:coingecko/feature/coin_details/presentation/bloc/coin_details_bloc.dart';
@@ -26,6 +27,9 @@ class CoinDetailsAppbar extends StatelessWidget implements PreferredSizeWidget {
               imageUrl: bloc.coinItemEntity?.image ?? "",
               name: bloc.coinItemEntity?.name ?? "",
               symbol: bloc.coinItemEntity?.symbol ?? "",
+              currency: CurrencyConstants.getCurrencyForCoinGecko(
+                Localizations.localeOf(context),
+              ),
             ),
           );
         },

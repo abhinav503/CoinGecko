@@ -4,6 +4,7 @@ import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/ui/atoms/carousel_slider_widget.dart';
 import 'package:coingecko/core/ui/atoms/custom_icon_widget.dart';
+import 'package:coingecko/core/ui/atoms/custom_text_field.dart';
 import 'package:coingecko/core/ui/atoms/primary_button.dart';
 import 'package:coingecko/core/ui/molecules/campaign_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_tabbar.dart';
@@ -115,6 +116,14 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
           ),
           const Divider(),
           const SizedBox(height: 10),
+          CustomTextField(
+            hintText: StringConstants.searchCoin,
+            controller: homeBloc.searchController,
+            onChanged: (value) {
+              homeBloc.add(SearchMarketCoinsEvent());
+            },
+          ),
+          const SizedBox(height: 20),
           Flexible(
             child: BlocConsumer<HomeBloc, HomeState>(
               listener: (context, state) {
@@ -123,7 +132,8 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                 }
               },
               builder: (context, state) {
-                if (homeBloc.marketCoins.isEmpty) {
+                if (homeBloc.marketCoins.isEmpty &&
+                    homeBloc.filteredMarketCoins.isEmpty) {
                   return _buildEmptyObject();
                 }
                 return Column(
@@ -172,15 +182,15 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                         controller: homeBloc.tabController,
                         children: [
                           CoinsListview(
-                            coins: homeBloc.marketCoins,
+                            coins: homeBloc.filteredMarketCoins,
                             homeBloc: homeBloc,
                           ),
                           CoinsListview(
-                            coins: homeBloc.marketCoins,
+                            coins: homeBloc.filteredMarketCoins,
                             homeBloc: homeBloc,
                           ),
                           CoinsListview(
-                            coins: homeBloc.marketCoins,
+                            coins: homeBloc.filteredMarketCoins,
                             homeBloc: homeBloc,
                           ),
                         ],

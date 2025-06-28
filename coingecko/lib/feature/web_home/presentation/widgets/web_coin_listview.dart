@@ -1,6 +1,7 @@
 import 'package:coingecko/core/constants/currency_constants.dart';
 import 'package:coingecko/core/constants/string_constants.dart';
 import 'package:coingecko/core/enums/market_chart_time_filter.dart';
+import 'package:coingecko/core/ui/atoms/custom_text_field.dart';
 import 'package:coingecko/core/ui/atoms/pagination_controller.dart';
 import 'package:coingecko/core/ui/molecules/coin_item_widget.dart';
 import 'package:coingecko/core/ui/molecules/coin_selected_widget.dart';
@@ -16,12 +17,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class WebCoinListview extends StatefulWidget {
   final List<MarketCoinEntity> coins;
   final TabController tabController;
+  final bool isEmptyState;
   final PaginationScrollController? paginationController;
   const WebCoinListview({
     super.key,
     required this.coins,
     required this.tabController,
     this.paginationController,
+    this.isEmptyState = false,
   });
 
   @override
@@ -46,6 +49,9 @@ class _WebCoinListviewState extends State<WebCoinListview> {
       listener: (context, state) {
         if (state is SelectedCoinState) {
           if (state.runApis) {
+            if (widget.isEmptyState) {
+              return;
+            }
             coinDetailsBloc.add(
               GetCoinMarketDataEvent(
                 id: widget.coins[webHomeBloc.selectedIndex].id ?? "",
@@ -58,15 +64,37 @@ class _WebCoinListviewState extends State<WebCoinListview> {
         }
       },
       builder: (context, state) {
+        print("widget.isEmptyState =========> ${widget.isEmptyState}");
+        MarketCoinEntity? selectedCoin;
+        if (widget.isEmptyState) {
+          selectedCoin = coinDetailsBloc.coinItemEntity;
+        } else {
+          selectedCoin = widget.coins[webHomeBloc.selectedIndex];
+        }
         return SizedBox(
           width: 400.w,
           height: MediaQuery.of(context).size.height - 120.h,
           child: Column(
             children: [
               CoinSelectedWidget(
-                imageUrl: widget.coins[webHomeBloc.selectedIndex].image ?? "",
-                name: widget.coins[webHomeBloc.selectedIndex].name ?? "",
-                symbol: widget.coins[webHomeBloc.selectedIndex].symbol ?? "",
+                imageUrl: selectedCoin?.image ?? "",
+                name: selectedCoin?.name ?? "",
+                symbol: selectedCoin?.symbol ?? "",
+                currency: CurrencyConstants.getCurrencyForCoinGecko(
+                  Localizations.localeOf(context),
+                ),
+              ),
+              SizedBox(height: 20.h),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                height: 50.h,
+                child: CustomTextField(
+                  hintText: StringConstants.searchCoin,
+                  controller: homeBloc.searchController,
+                  onChanged: (value) {
+                    homeBloc.add(SearchMarketCoinsEvent());
+                  },
+                ),
               ),
               CustomWebTabbar(
                 height: 64.h,
@@ -91,6 +119,14 @@ class _WebCoinListviewState extends State<WebCoinListview> {
                 isScrollable: true,
                 onTabChanged: (index) {},
               ),
+              if (widget.isEmptyState) SizedBox(height: 20.h),
+              if (widget.isEmptyState)
+                Center(
+                  child: Text(
+                    "No data found",
+                    style: TextStyle(fontSize: 16.sp),
+                  ),
+                ),
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(0),

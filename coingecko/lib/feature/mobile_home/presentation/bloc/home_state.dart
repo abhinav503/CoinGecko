@@ -12,3 +12,5 @@ class FetchMarketCoinsErrorState extends HomeState {
   final String message;
   FetchMarketCoinsErrorState({required this.message});
 }
+
+class SearchMarketCoinsState extends HomeState {}

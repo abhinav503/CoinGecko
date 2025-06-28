@@ -1,5 +1,5 @@
 import 'package:coingecko/core/colors/app_colors.dart';
-import 'package:coingecko/core/constants/string_constants.dart';
+import 'package:coingecko/core/ui/atoms/name_symbol_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +10,14 @@ class CoinSelectedWidget extends StatelessWidget {
   final String name;
   final String symbol;
   final double? height;
+  final String currency;
   const CoinSelectedWidget({
     super.key,
     required this.imageUrl,
     required this.name,
     required this.symbol,
     this.height,
+    required this.currency,
   });
 
   @override
@@ -41,37 +43,7 @@ class CoinSelectedWidget extends StatelessWidget {
                     : AppColors.primaryTextColor,
           ),
         ),
-        subtitle: Row(
-          children: [
-            Text(
-              "${symbol.toUpperCase()} ",
-              style: const TextStyle(
-                fontSize: 12,
-                color:
-                    kIsWeb
-                        ? WebAppbarColors.appbarTextColor
-                        : AppColors.primaryTextColor,
-              ),
-            ),
-            const CircleAvatar(
-              radius: 3,
-              backgroundColor:
-                  kIsWeb
-                      ? WebAppbarColors.appbarTextColor
-                      : AppColors.primaryTextColor,
-            ),
-            const Text(
-              " ${StringConstants.usd}",
-              style: TextStyle(
-                fontSize: 12,
-                color:
-                    kIsWeb
-                        ? WebAppbarColors.appbarTextColor
-                        : AppColors.primaryTextColor,
-              ),
-            ),
-          ],
-        ),
+        subtitle: NameSymbolWidget(symbol: symbol, currency: currency),
       ),
     );
   }

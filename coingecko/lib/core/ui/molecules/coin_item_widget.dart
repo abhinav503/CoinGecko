@@ -1,4 +1,5 @@
 import 'package:coingecko/core/colors/app_colors.dart';
+import 'package:coingecko/core/ui/atoms/name_symbol_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_network_image.dart';
 import 'package:coingecko/core/utils/price_formatter.dart';
 import 'package:coingecko/feature/mobile_home/domain/entities/market_coin_entity.dart';
@@ -27,17 +28,17 @@ class CoinItemWidget extends StatelessWidget {
       selectedTileColor: WebAppbarColors.selectedColor,
       selectedColor: WebAppbarColors.selectedColor,
       selected: isSelected,
-      title: Text(
-        coin.name ?? "",
-        style: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
-          color: AppColors.primaryTextColor,
-        ),
+      title: NameSymbolWidget(
+        symbol:
+            (coin.name ?? "").length > 10
+                ? "${(coin.name ?? "").substring(0, 10)}..."
+                : (coin.name ?? ""),
+        currency: (coin.symbol ?? "").toUpperCase(),
+        textColor: AppColors.primaryTextColor,
       ),
       subtitle: Text(
-        (coin.symbol ?? "").toUpperCase(),
-        style: const TextStyle(fontSize: 12, color: AppColors.primaryTextColor),
+        PriceFormatter.formatPrice(coin.marketCap, context: context),
+        style: Theme.of(context).textTheme.bodySmall,
       ),
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,

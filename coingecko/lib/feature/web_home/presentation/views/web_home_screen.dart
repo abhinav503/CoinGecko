@@ -8,6 +8,7 @@ import 'package:coingecko/core/ui/molecules/custom_web_tabbar.dart';
 import 'package:coingecko/feature/coin_details/presentation/bloc/coin_details_bloc.dart';
 import 'package:coingecko/feature/coin_details/presentation/widgets/coin_overview.dart';
 import 'package:coingecko/feature/coin_details/presentation/widgets/coin_price_chart.dart';
+import 'package:coingecko/feature/mobile_home/domain/entities/market_coin_entity.dart';
 import 'package:coingecko/feature/mobile_home/presentation/bloc/home_bloc.dart';
 import 'package:coingecko/feature/mobile_home/presentation/view/home_screen.dart';
 import 'package:coingecko/feature/web_home/presentation/bloc/web_home_bloc.dart';
@@ -131,18 +132,20 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
               (previous, current) => current is! UpdateMarketCoinsOrderState,
           listener: (context, state) {
             if (state is FetchMarketCoinsState) {
+              List<MarketCoinEntity> coins =
+                  widget.homeBloc.filteredMarketCoins;
+
               if (widget.screenType != ScreenType.mobileSmall) {
-                int seletedCoinindex = widget.homeBloc.marketCoins.indexWhere(
+                int seletedCoinindex = coins.indexWhere(
                   (element) => element.id == widget.selectedCoin,
                 );
                 if (seletedCoinindex == -1) {
                   seletedCoinindex = 0;
                 }
-                widget.coinDetailsBloc.coinItemEntity =
-                    widget.homeBloc.marketCoins[seletedCoinindex];
+                widget.coinDetailsBloc.coinItemEntity = coins[seletedCoinindex];
                 widget.coinDetailsBloc.add(
                   GetCoinMarketDataEvent(
-                    id: widget.homeBloc.marketCoins[seletedCoinindex].id ?? "",
+                    id: coins[seletedCoinindex].id ?? "",
                     vsCurrency: CurrencyConstants.getCurrencyForCoinGecko(
                       Localizations.localeOf(context),
                     ),
@@ -154,59 +157,56 @@ class _WebHomeScreenWidgetState extends State<WebHomeScreenWidget>
             }
           },
           builder: (context, state) {
-            if (widget.homeBloc.marketCoins.isNotEmpty) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  WebCoinListview(
-                    coins: widget.homeBloc.marketCoins,
-                    tabController: tabController,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BlocConsumer<CoinDetailsBloc, CoinDetailsState>(
-                            listener: (context, state) {
-                              if (state is CoinDetailsApiErrorState) {
-                                widget.showToast(state.message);
-                              }
-                            },
-                            builder: (context, state) {
-                              if (widget.coinDetailsBloc.coinItemEntity !=
-                                  null) {
-                                return CoinDetailsTile(
-                                  coin: widget.coinDetailsBloc.coinItemEntity!,
-                                );
-                              }
-                              return const SizedBox.shrink();
-                            },
-                          ),
-                          WebCoinChart(
-                            screenType: widget.screenType,
-                            coinDetailsBloc: widget.coinDetailsBloc,
-                            showToast: widget.showToast,
-                          ),
-                        ],
-                      ),
-                      [
-                            ScreenType.mobileSmall,
-                            ScreenType.mobileLarge,
-                          ].contains(widget.screenType)
-                          ? const SizedBox.shrink()
-                          : CoinInfoWidget(
-                            infoTabController: infoTabController,
-                            coinDetailsBloc: widget.coinDetailsBloc,
-                          ),
-                    ],
-                  ),
-                ],
-              );
-            }
-            return const SizedBox.shrink();
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WebCoinListview(
+                  coins: widget.homeBloc.filteredMarketCoins,
+                  isEmptyState: widget.homeBloc.filteredMarketCoins.isEmpty,
+                  tabController: tabController,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BlocConsumer<CoinDetailsBloc, CoinDetailsState>(
+                          listener: (context, state) {
+                            if (state is CoinDetailsApiErrorState) {
+                              widget.showToast(state.message);
+                            }
+                          },
+                          builder: (context, state) {
+                            if (widget.coinDetailsBloc.coinItemEntity != null) {
+                              return CoinDetailsTile(
+                                coin: widget.coinDetailsBloc.coinItemEntity!,
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                        WebCoinChart(
+                          screenType: widget.screenType,
+                          coinDetailsBloc: widget.coinDetailsBloc,
+                          showToast: widget.showToast,
+                        ),
+                      ],
+                    ),
+                    [
+                          ScreenType.mobileSmall,
+                          ScreenType.mobileLarge,
+                        ].contains(widget.screenType)
+                        ? const SizedBox.shrink()
+                        : CoinInfoWidget(
+                          infoTabController: infoTabController,
+                          coinDetailsBloc: widget.coinDetailsBloc,
+                        ),
+                  ],
+                ),
+              ],
+            );
           },
         ),
       ],
@@ -265,7 +265,7 @@ class WebCoinChart extends StatelessWidget {
             child: const Center(child: CircularProgressIndicator()),
           );
         }
-        if (coinDetailsBloc.coinMarketDataEntity!.prices!.isEmpty) {
+        if (coinDetailsBloc.coinMarketDataEntity?.prices?.isEmpty ?? false) {
           return SizedBox(
             height: MediaQuery.of(context).size.height - 340.h,
             width:

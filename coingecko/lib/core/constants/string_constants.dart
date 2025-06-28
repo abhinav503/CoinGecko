@@ -36,4 +36,5 @@ class StringConstants {
   static const String aZ = "A-Z";
   static const String marketCapDesc = "Market Cap";
   static const String currentPrice = "Current Price";
+  static const String searchCoin = "Search by name or symbol";
 }

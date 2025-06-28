@@ -19,3 +19,7 @@ class UpdateMarketCoinsOrderEvent extends HomeEvent {
   final int index;
   UpdateMarketCoinsOrderEvent({required this.index});
 }
+
+class SearchMarketCoinsEvent extends HomeEvent {
+  SearchMarketCoinsEvent();
+}
