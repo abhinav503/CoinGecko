@@ -38,8 +38,10 @@ flutter run \
   - **Current Price (USD)**
   - **Market Cap**
   - **24h Price Change (%)**
-- 🔁 **Sorting functionality**: Toggle between ascending and descending market cap.
+- 🔁 **Sorting/Searching functionality**: Toggle between ascending and descending market cap.
 - 💰 **Static total balance** and a **banner section** to enhance layout spacing.
+- 💰 **Localization** as per Language to format the numbers and Currency for mobile
+- 💰 **Real Time price Change** for mobile every 5 seconds
 - ➡️ Clicking a coin navigates to its **Coin Detail Page**.
 
 ---
@@ -68,7 +70,7 @@ flutter run \
 <table style="width: 100%; text-align: center; border-collapse: collapse;">
   <tr>
     <td>Mobile Dashboard Market Cap Descending</td>
-    <td>Mobile Dashboard Market Cap Ascending</td>
+    <td>Mobile Dashboard Searching</td>
     <td>Mobile Coin Details Page</td>
   </tr>
   <tr>
