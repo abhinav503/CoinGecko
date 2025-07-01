@@ -1,4 +1,5 @@
 import 'package:coingecko/feature/coin_details/presentation/views/coin_details_page.dart';
+import 'package:coingecko/feature/favourites/presentation/views/favourites_page.dart';
 import 'package:coingecko/feature/mobile_home/presentation/view/home_page.dart';
 import 'package:coingecko/feature/web_home/presentation/views/web_home_page.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ class Routes {
   static const String coinDetails = "/coinDetails";
   static const String webCoinDetails = "/coinDetails";
   static const String webHome = "/webHome";
+  static const String favourites = "/favourites";
   static Route<dynamic> generateRouteMobile(RouteSettings settings) {
     switch (settings.name) {
       case home:
@@ -20,6 +22,14 @@ class Routes {
           builder: (context) => const CoinDetailsPage(),
           settings: RouteSettings(
             name: coinDetails,
+            arguments: settings.arguments,
+          ),
+        );
+      case favourites:
+        return MaterialPageRoute(
+          builder: (context) => const FavouritesPage(),
+          settings: RouteSettings(
+            name: favourites,
             arguments: settings.arguments,
           ),
         );

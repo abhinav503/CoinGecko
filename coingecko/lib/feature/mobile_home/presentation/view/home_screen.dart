@@ -9,7 +9,9 @@ import 'package:coingecko/core/ui/atoms/primary_button.dart';
 import 'package:coingecko/core/ui/molecules/campaign_widget.dart';
 import 'package:coingecko/core/ui/molecules/custom_tabbar.dart';
 import 'package:coingecko/core/utils/price_formatter.dart';
+import 'package:coingecko/feature/favourites/presentation/bloc/favourites_bloc.dart';
 import 'package:coingecko/feature/mobile_home/presentation/widgets/coins_listview.dart';
+import 'package:coingecko/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,11 +29,13 @@ class HomeScreen extends BaseScreen {
 class _HomeScreenState extends BaseScreenState<HomeScreen>
     with TickerProviderStateMixin {
   late final HomeBloc homeBloc;
+  late final FavouritesBloc favouritesBloc;
   bool isInit = true;
 
   @override
   void initState() {
     homeBloc = BlocProvider.of<HomeBloc>(context);
+    favouritesBloc = BlocProvider.of<FavouritesBloc>(context);
     homeBloc.tabController = TabController(
       length: 3,
       vsync: this,
@@ -95,7 +99,12 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                     ),
                   ],
                 ),
-                PrimaryButton(text: StringConstants.deposit, onPressed: () {}),
+                PrimaryButton(
+                  text: StringConstants.deposit,
+                  onPressed: () {
+                    Navigator.pushNamed(context, Routes.favourites);
+                  },
+                ),
               ],
             ),
           ),
@@ -184,14 +193,23 @@ class _HomeScreenState extends BaseScreenState<HomeScreen>
                           CoinsListview(
                             coins: homeBloc.filteredMarketCoins,
                             homeBloc: homeBloc,
+                            onTapBookmark: (coin) {
+                              favouritesBloc.add(AddFavouritesEvent(coin));
+                            },
                           ),
                           CoinsListview(
                             coins: homeBloc.filteredMarketCoins,
                             homeBloc: homeBloc,
+                            onTapBookmark: (coin) {
+                              favouritesBloc.add(AddFavouritesEvent(coin));
+                            },
                           ),
                           CoinsListview(
                             coins: homeBloc.filteredMarketCoins,
                             homeBloc: homeBloc,
+                            onTapBookmark: (coin) {
+                              favouritesBloc.add(AddFavouritesEvent(coin));
+                            },
                           ),
                         ],
                       ),

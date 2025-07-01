@@ -10,12 +10,14 @@ class CoinItemWidget extends StatelessWidget {
   final VoidCallback onTap;
   final bool isSelected;
   final bool showLeading;
+  final VoidCallback? onTapBookmark;
   const CoinItemWidget({
     super.key,
     required this.coin,
     required this.onTap,
     this.isSelected = false,
     this.showLeading = true,
+    this.onTapBookmark,
   });
 
   @override
@@ -40,25 +42,34 @@ class CoinItemWidget extends StatelessWidget {
         PriceFormatter.formatPrice(coin.marketCap, context: context),
         style: Theme.of(context).textTheme.bodySmall,
       ),
-      trailing: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            PriceFormatter.formatPercentage(coin.priceChangePercentage24h),
-            style: TextStyle(
-              color:
-                  coin.priceChangePercentage24h! > 0
-                      ? Colors.green
-                      : Colors.red,
-              fontSize: 15,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                PriceFormatter.formatPercentage(coin.priceChangePercentage24h),
+                style: TextStyle(
+                  color:
+                      coin.priceChangePercentage24h! > 0
+                          ? Colors.green
+                          : Colors.red,
+                  fontSize: 15,
+                ),
+              ),
+              Text(
+                PriceFormatter.formatPrice(coin.currentPrice, context: context),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.primaryTextColor,
+                ),
+              ),
+            ],
           ),
-          Text(
-            PriceFormatter.formatPrice(coin.currentPrice, context: context),
-            style: const TextStyle(
-              fontSize: 12,
-              color: AppColors.primaryTextColor,
-            ),
+          IconButton(
+            onPressed: onTapBookmark,
+            icon: const Icon(Icons.bookmark),
           ),
         ],
       ),

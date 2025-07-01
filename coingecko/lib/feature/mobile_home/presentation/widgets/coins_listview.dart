@@ -9,11 +9,13 @@ class CoinsListview extends StatelessWidget {
   final List<MarketCoinEntity> coins;
   final ScrollController? controller;
   final HomeBloc homeBloc;
+  final Function(MarketCoinEntity) onTapBookmark;
   const CoinsListview({
     super.key,
     required this.coins,
     this.controller,
     required this.homeBloc,
+    required this.onTapBookmark,
   });
 
   @override
@@ -27,6 +29,9 @@ class CoinsListview extends StatelessWidget {
         return CoinItemWidget(
           key: Key("coin_item_widget_$index"),
           coin: coins[index],
+          onTapBookmark: () {
+            onTapBookmark(coins[index]);
+          },
           onTap: () async {
             if (kIsWeb) {
               Navigator.pushNamed(

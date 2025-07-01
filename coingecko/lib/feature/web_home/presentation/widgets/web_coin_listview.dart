@@ -134,6 +134,7 @@ class _WebCoinListviewState extends State<WebCoinListview> {
                   itemCount: widget.coins.length,
                   itemBuilder: (context, index) {
                     return CoinItemWidget(
+                      onTapBookmark: () {},
                       showLeading: false,
                       isSelected: webHomeBloc.selectedIndex == index,
                       coin: widget.coins[index],

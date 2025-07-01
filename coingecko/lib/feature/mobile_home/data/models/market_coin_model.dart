@@ -1,4 +1,7 @@
-class MarketCoinModel {
+import 'package:coingecko/core/model_to_entity_mapper/mapper.dart';
+import 'package:coingecko/feature/mobile_home/domain/entities/market_coin_entity.dart';
+
+class MarketCoinModel extends Mapper<MarketCoinEntity, MarketCoinModel> {
   String? id;
   String? symbol;
   String? name;
@@ -71,5 +74,21 @@ class MarketCoinModel {
     data['price_change_24h'] = priceChange24h;
     data['total_supply'] = totalSupply;
     return data;
+  }
+
+  @override
+  MarketCoinModel call(MarketCoinEntity object) {
+    return MarketCoinModel(
+      id: object.id,
+      symbol: object.symbol,
+      name: object.name,
+      image: object.image,
+      currentPrice: object.currentPrice,
+      marketCap: object.marketCap,
+      marketCapRank: object.marketCapRank,
+      priceChangePercentage24h: object.priceChangePercentage24h,
+      priceChange24h: object.priceChange24h,
+      totalSupply: object.totalSupply,
+    );
   }
 }

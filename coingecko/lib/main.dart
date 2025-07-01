@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
   await injectionContainer();
   if (!args.contains("testEnv")) {
     runApp(const MainApp());
